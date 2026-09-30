@@ -1,0 +1,5 @@
+This is the group assignment for IEAP Python Series 03.
+
+```{python}
+print("Python is working")
+```
