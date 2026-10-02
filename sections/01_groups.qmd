@@ -1,7 +1,13 @@
 
 ## GitHub repository
 
-GitHub Repository: https://github.com/jenniferhoumard/IEAP-Python-Series03-Group
+The group assignment was developed in Python using Visual Studio Code (VS Code) and managed through a public GitHub repository:
+
+https://github.com/jenniferhoumard/IEAP-Python-Series03-Group
+
+To organize the group work, one member initially created the GitHub repository, added the other members as collaborators, and prepared the master Quarto document and separate subsection files (.qmd). The headings and subsections were predefined according to the assignment requirements so that each member had a clear structure to follow and knew exactly where to add their work. This also allowed members to work on their assigned files independently, reducing overlap and potential conflicts.
+
+The assignment was developed in Python using Visual Studio Code (VS Code). Quarto (.qmd) files were used to combine Python code, explanations, tables, and plots in the same document. The master Quarto file brings together all the subsections into a single report with consistent headings, automatic numbering, and a table of contents.
 
 ## Division of tasks
 
