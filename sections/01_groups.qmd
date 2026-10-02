@@ -1,5 +1,11 @@
-This is the group assignment for IEAP Python Series 03.
 
-```{python}
-print("Python is working")
-```
+## GitHub repository
+
+GitHub Repository: https://github.com/jenniferhoumard/IEAP-Python-Series03-Group
+
+## Division of tasks
+
+
+## Branching strategy
+
+

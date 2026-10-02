@@ -221,6 +221,5 @@ __marimo__/
 **/*.quarto_ipynb
 
 # Quarto generated files
-*.html
 *_files/
 .quarto/

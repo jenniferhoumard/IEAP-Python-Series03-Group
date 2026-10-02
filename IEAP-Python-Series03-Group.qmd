@@ -5,56 +5,47 @@ author:
   - "Jennifer Houmard"
   - "Ayesha Waheed"
   - "Werner Binche"
-format: html
+
+number-sections: true
+toc: true
+toc-depth: 3
+
+format:
+  html:
+    toc-location: left
+    embed-resources: true
+
 jupyter: python3
 ---
 
-# 1. The groups
+# 1. Group workflow and division of tasks between group members
 
 {{< include sections/01_groups.qmd >}}
 
 # 2. Create functions to find and plot remarkable points
 
-## 2.1 Functions to find zero crossings and to plot them
-
 {{< include sections/02_1_zero_crossings.qmd >}}
 
-## 2.2 Explain and improve the previous code
-
 {{< include sections/02_2_explain_improve_code.qmd >}}
-
-## 2.3 Create new functions to find the local maxima and minima
 
 {{< include sections/02_3_local_maxima_minima.qmd >}}
 
 # 3. Analyze a known signal
 
-## 3.1 Create the signal and plot it
-
 {{< include sections/03_1_create_signal.qmd >}}
 
-## 3.2 Plot the remarkable points
-
 {{< include sections/03_2_remarkable_points.qmd >}}
-
-## 3.3 Use the remarkable points to find the frequency of the signal
 
 {{< include sections/03_3_signal_frequency.qmd >}}
 
 # 4. Redo the analysis with a noisy signal
 
-## 4.1 Create the noisy signal and plot it
-
 {{< include sections/04_1_noisy_signal.qmd >}}
-
-## 4.2 Plot the remarkable points in the noisy signal
 
 {{< include sections/04_2_noisy_remarkable_points.qmd >}}
 
-## 4.3 Low pass filter the noisy signal
-
 {{< include sections/04_3_low_pass_filter.qmd >}}
 
-# 5. Your assignment
+# 5. Critical points and problem solving
 
-{{< include sections/05_assignment.qmd >}}
+{{< include sections/05_critical_point.qmd >}}
