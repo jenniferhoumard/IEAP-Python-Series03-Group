@@ -27,7 +27,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 ```
 
-# 3. Step 1: Time axis
+# 3. Plotting helper functions
+
+Before creating the signal, I write two small functions for plotting.
+They are used in this file, and I can also reuse them in later exercises.
+
+```{python}
+def plot_signal(i, s, color="blue", label="signal", xlabel="index"):
+    """Draw a signal and a horizontal zero line on the current axes."""
+    # draw the zero line first, so it stays under the signal
+    plt.axhline(y=0, color="gray", linestyle="-")
+
+    # draw the signal with a small dot on every sample and a thin line
+    plt.plot(i, s, ".-", markersize=5, linewidth=0.25, color=color, label=label)
+
+    # axis labels
+    plt.ylabel("signal")
+    plt.xlabel(xlabel)
+
+
+def plot_remarkable_points(t, s, format, label):
+    """Draw labeled points (for example peaks) on the current axes."""
+    # format is a matplotlib string like "*r" (red star) or "^g" (green triangle)
+    # the markers are big, so they are easy to see on top of the signal
+    plt.plot(t, s, format, markersize=10, label=label)
+```
+
+# 4. Step 1: Time axis
 
 The signal runs from 0 to 2 seconds. I use a step of 0.01 s, which gives 200 points.
 
@@ -45,7 +71,7 @@ print("Number of points:", len(t))    # should be 200
 print("First 5 values:", t[:5])       # should start at 0 and go up by 0.01
 ```
 
-# 4. Step 2: A general sine wave function
+# 5. Step 2: A general sine wave function
 
 A sine wave is described by three numbers:
 
@@ -70,7 +96,7 @@ def sine_wave(t, amplitude, frequency, phase=0.0):
     return amplitude * np.sin(2 * np.pi * frequency * t + phase)
 ```
 
-# 5. Step 3: First sine wave (s1)
+# 6. Step 3: First sine wave (s1)
 
 From the figure, the green wave:
 
@@ -90,17 +116,11 @@ Now let's plot it to check.
 # create a new figure of size 7 x 4 inches
 plt.figure(figsize=(7, 4))
 
-# draw s1 against time
-# marker="o" puts a small dot on every data point
-# markersize controls the dot size, linewidth makes the connecting line thin
-plt.plot(t, s1, color="green", marker="o", markersize=2, linewidth=0.3)
+# draw s1 with my helper function (the x axis is time, not index)
+plot_signal(t, s1, color="green", label="s1", xlabel="time [s]")
 
-# add a title and axis labels so the plot is easy to understand
+# add a title and a grid so the plot is easy to read
 plt.title("s1: amplitude 1, frequency 2 Hz")
-plt.xlabel("time [s]")
-plt.ylabel("signal")
-
-# show grid lines in the background
 plt.grid(True)
 
 # display the plot
@@ -109,7 +129,7 @@ plt.show()
 
 It peaks at 1 and completes 4 cycles in 2 seconds, which matches the green curve in the figure.
 
-# 6. Step 4: Second sine wave (s2)
+# 7. Step 4: Second sine wave (s2)
 
 From the figure, the orange wave:
 
@@ -129,19 +149,17 @@ Let's plot it.
 ```{python}
 # same plotting steps as for s1, only the data and color are different
 plt.figure(figsize=(7, 4))
-plt.plot(t, s2, color="orange", marker="o", markersize=2, linewidth=0.3)
+plot_signal(t, s2, color="orange", label="s2", xlabel="time [s]")
 
 # title says which wave this is and what settings were used
 plt.title("s2: amplitude 2, frequency 1 Hz, phase 1 rad")
-plt.xlabel("time [s]")
-plt.ylabel("signal")
 plt.grid(True)
 plt.show()
 ```
 
 It starts at about 1.7, peaks at 2 and has 2 cycles in 2 seconds, like the orange curve in the figure.
 
-# 7. Step 5: Combine them (s)
+# 8. Step 5: Combine them (s)
 
 Now I just add the two waves point by point:
 
@@ -154,20 +172,36 @@ s = s1 + s2
 Plot the combined signal:
 
 ```{python}
-# plot the combined signal in blue, with slightly bigger dots
-# so it stands out (like in the original figure)
+# plot the combined signal in blue
 plt.figure(figsize=(7, 4))
-plt.plot(t, s, color="blue", marker="o", markersize=3, linewidth=0.3)
+plot_signal(t, s, color="blue", label="s", xlabel="time [s]")
 plt.title("s = s1 + s2")
-plt.xlabel("time [s]")
-plt.ylabel("signal")
 plt.grid(True)
 plt.show()
 ```
 
 This looks more complicated than a single sine wave. The highs reach about 3 where both waves are high, and there are flatter dips around -1 where the waves partly cancel each other.
 
-# 8. Putting it into one function
+Let's use `plot_remarkable_points` to mark the highest and the lowest value of `s`.
+
+```{python}
+# argmax / argmin give the position of the biggest / smallest value
+i_highest = np.argmax(s)
+i_lowest = np.argmin(s)
+
+plt.figure(figsize=(7, 4))
+plot_signal(t, s, color="blue", label="s", xlabel="time [s]")
+
+# mark the two points with big stars
+plot_remarkable_points(t[i_highest], s[i_highest], "*r", "highest value")
+plot_remarkable_points(t[i_lowest], s[i_lowest], "*m", "lowest value")
+
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+# 9. Putting it into one function
 
 Now that each step works, I wrap the whole process in one function.
 
@@ -190,7 +224,7 @@ def generate_signal(t):
 s1, s2, s = generate_signal(t)
 ```
 
-# 9. Final plot: all three signals together
+# 10. Final plot: all three signals together
 
 ```{python}
 # make one figure that will hold all three signals

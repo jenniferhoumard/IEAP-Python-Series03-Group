@@ -1,1 +1,188 @@
 ## Plot the remarkable points
+
+# 1. Task
+
+Once the signal is created, I find its remarkable points and plot them. I reuse the functions created by my team member in previous exercises instead of writing them again.
+
+The remarkable points are:
+
+- local maxima
+- local minima
+- positive zero crossings (the signal goes from negative to positive)
+- negative zero crossings (the signal goes from positive to negative)
+
+# 2. Reusing earlier functions
+
+We will reuse the functions created in previous exercises by my team member.
+
+I load only their Python code, so their text and plots do not appear in this document.
+
+```{python}
+#| include: false
+
+import re
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+```
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+
+def load_qmd_code(filename):
+    """Run all the python code chunks of a .qmd file, without rendering the file."""
+    # read the whole .qmd file as text
+    text = Path(filename).read_text()
+
+    # find every ```{python} ... ``` chunk and keep only the code inside
+    chunks = re.findall(r"```\{python\}[^\n]*\n(.*?)```", text, flags=re.DOTALL)
+
+    # run the chunks without displaying the plots from the source document
+    original_show = plt.show
+    plt.show = lambda *args, **kwargs: None
+    try:
+        with redirect_stdout(StringIO()):
+            exec("\n\n".join(chunks), globals())
+    finally:
+        plt.show = original_show
+        plt.close("all")
+
+# the order matters: the maxima/minima file needs the zero-crossing functions
+load_qmd_code("02_1_zero_crossings.qmd")
+load_qmd_code("03_1_create_signal.qmd")
+load_qmd_code("02_3_local_maxima_minima.qmd")
+```
+
+The functions I reuse are:
+
+- `make_time` and `generate_signal` to create the signal
+- `plot_signal` and `plot_remarkable_points` to draw things
+- `find_local_maxima_minima` to find the peaks and valleys
+- `find_zero_crossings` and `plot_zero_crossings` for the zero crossings
+
+# 3. Step 1: Create the signal
+
+```{python}
+# time axis from 0 to 2 seconds
+t = make_time()
+
+# s1 and s2 are the two sine waves, s is their sum
+s1, s2, s = generate_signal(t)
+```
+
+Let's plot `s` with `plot_signal`.
+
+```{python}
+plt.figure()
+
+# draws the signal and a gray zero line
+plot_signal(t, s)
+
+# plot_signal writes "index" on the x axis, but our x axis is time
+plt.xlabel("time [s]")
+
+plt.grid(True)
+plt.show()
+```
+
+This is the signal I want to analyse.
+
+# 4. Step 2: Local maxima and minima
+
+`find_local_maxima_minima` gives me the indices (positions) of the peaks and the valleys.
+
+```{python}
+# i_max = positions of local maxima, i_min = positions of local minima
+i_max, i_min = find_local_maxima_minima(s)
+
+# print the indices and the times they correspond to
+print("Indices of local maxima:", i_max)
+print("Times of local maxima  :", t[i_max])
+print("Indices of local minima:", i_min)
+print("Times of local minima  :", t[i_min])
+```
+
+Now let's plot them on top of the signal.
+
+```{python}
+plt.figure()
+plot_signal(t, s)
+
+# t[i_max] and s[i_max] are the time and value at each maximum
+# I use star markers: red for maxima, magenta for minima
+plot_remarkable_points(t[i_max], s[i_max], "*r", "local maxima")
+plot_remarkable_points(t[i_min], s[i_min], "*m", "local minima")
+
+plt.xlabel("time [s]")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+The stars sit on the tops of the peaks and the bottoms of the valleys, so the function works.
+The small bump around -1 gives one extra maximum and one extra minimum in each repetition of the signal.
+
+# 5. Step 3: Zero crossings
+
+`find_zero_crossings` gives the indices just before the signal changes sign.
+
+```{python}
+# i_pos = negative to positive, i_neg = positive to negative
+i_pos, i_neg = find_zero_crossings(s)
+
+print("Positive zero crossings at times:", t[i_pos])
+print("Negative zero crossings at times:", t[i_neg])
+```
+
+Plot the zero crossings on the signal. `plot_zero_crossings` draws both kinds at once.
+
+```{python}
+plt.figure()
+plot_signal(t, s)
+
+# red triangle up = positive crossing, yellow triangle down = negative crossing
+plot_zero_crossings(t, s)
+
+plt.xlabel("time [s]")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+The triangles are placed where the signal passes through the gray zero line.
+
+# 6. Step 4: All remarkable points together
+
+To keep things clean, I put everything in one function that I can reuse for any signal.
+
+```{python}
+def display_remarkable_points(t, s):
+    """Plot a signal with its local maxima/minima and zero crossings."""
+    # find the local maxima and minima
+    i_max, i_min = find_local_maxima_minima(s)
+
+    plt.figure()
+
+    # 1. the signal itself (drawn first, so the markers stay on top)
+    plot_signal(t, s)
+
+    # 2. local maxima and minima as stars
+    plot_remarkable_points(t[i_max], s[i_max], "*r", "local maxima")
+    plot_remarkable_points(t[i_min], s[i_min], "*m", "local minima")
+
+    # 3. positive and negative zero crossings as triangles
+    plot_zero_crossings(t, s)
+
+    # labels, legend outside the plot, and grid
+    plt.xlabel("time [s]")
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.grid(True)
+    plt.show()
+```
+
+# 7. Final result
+
+```{python}
+display_remarkable_points(t, s)
+```
