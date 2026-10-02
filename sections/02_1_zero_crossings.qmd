@@ -26,3 +26,351 @@ plt.xlabel("Index")
 plt.ylabel("Signal")
 plt.title("Signal Plot")
 plt.show
+
+
+##Find zero crossing points
+
+# Find the zero crossing points in the signal
+
+signal_sign = np.sign(signal)
+diff_signal_sign = np.diff(signal_sign)
+where_diff_signal_sign_nonzero = np.where(diff_signal_sign != 0)[0]
+
+print("Signal signs:", signal_sign)
+print("Difference of signal signs:", diff_signal_sign)
+print("Indices where the difference of signal signs is non-zero:", where_diff_signal_sign_nonzero)
+
+# Alternative method to find zero crossing points
+zero_crossings = np.where(np.diff(np.sign(signal)))[0]
+print("Zero crossing points (indices):", zero_crossings)
+
+# Find positive zero-crossing points
+positive_zero_crossing = np.where(diff_signal_sign > 0)[0]
+print("Positive zero crossing points (indices):", positive_zero_crossing)
+
+# Find negative zero-crossing points
+negative_zero_crossing = np.where(diff_signal_sign < 0)[0]
+print("Negative zero crossing points (indices):", negative_zero_crossing)
+
+# plot the signal with positive and negative zero crossing
+
+plt.plot(index, signal, label='Signal')
+plt.scatter(index[positive_zero_crossing], signal[positive_zero_crossing], color='green', label='Positive')
+plt.scatter(index[negative_zero_crossing], signal[negative_zero_crossing], color='blue', label='Negative')
+plt.axhline(y=0, color='red', linestyle='--', label='Zero Line')
+
+def find_zero_crossings_no_zeros(signs: np.ndarray):
+    """Return indices where a zero-free sign array changes direction.
+
+    Parameters
+    ----------
+    signs : np.ndarray
+        One-dimensional array of negative and positive signs, with no zeros.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Indices of negative-to-positive changes, then positive-to-negative
+        changes. Each result is an integer array.
+    """
+    # Compare neighboring signs; the direction of each difference identifies
+    # the direction of a crossing.
+    diff = np.diff(signs)
+    # A positive difference is a negative-to-positive change; a negative one
+    # is a positive-to-negative change.
+    i_cross_pos = np.where(diff > 0)[0]
+    i_cross_neg = np.where(diff < 0)[0]
+    return i_cross_pos, i_cross_neg
+
+
+def propagate_signs_over_zeros(signs: np.ndarray):
+    """Replace zero signs using the nearest preceding nonzero sign.
+
+    Interior and trailing zeros inherit the preceding sign. Leading zeros
+    inherit the first nonzero sign; an all-zero array remains unchanged.
+
+    Parameters
+    ----------
+    signs : np.ndarray
+        One-dimensional array containing negative, zero, or positive signs.
+
+    Returns
+    -------
+    np.ndarray
+        A copy of ``signs`` with zeros filled according to these rules.
+    """
+    # Work on a copy so filling zeros does not modify the caller's array.
+    signs_no_zeros = signs.copy()
+    # There are no values to fill or inspect in an empty array.
+    if signs_no_zeros.size == 0:
+        return signs_no_zeros
+
+    # Map each nonzero value to its own index; zeros start with index 0 as a
+    # placeholder. The cumulative maximum carries the last nonzero index
+    # forward, so interior and trailing zeros inherit the preceding sign.
+    mask = signs_no_zeros != 0
+    idx = np.where(mask, np.arange(len(signs_no_zeros)), 0)
+    idx = np.maximum.accumulate(idx)
+    signs_no_zeros = signs_no_zeros[idx]
+
+    # The cumulative pass maps leading zeros to index 0. Replace them with the
+    # first nonzero sign instead; if none exists, the all-zero array stays as-is.
+    if signs_no_zeros[0] == 0:
+        i_first_nonzero = np.where(signs != 0)[0]
+        if len(i_first_nonzero) > 0:
+            signs_no_zeros[: i_first_nonzero[0]] = signs[i_first_nonzero[0]]
+
+    return signs_no_zeros
+
+
+def find_zero_crossings(s: np.ndarray):
+    """Find positive and negative crossings in a one-dimensional signal.
+
+    Zero-valued samples are assigned the preceding nonzero sign; leading
+    zeros use the first nonzero sign. An all-zero signal has no crossings.
+
+    Parameters
+    ----------
+    s : np.ndarray
+        One-dimensional array of signal samples.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Indices of negative-to-positive crossings, then positive-to-negative
+        crossings. The index marks the sample immediately before the change.
+
+    Raises
+    ------
+    ValueError
+        If ``s`` is not one-dimensional.
+    """
+
+    # Normalize array-like input, then reject signals with more than one dimension.
+    s = np.asarray(s)
+    if s.ndim != 1:
+        raise ValueError("Input must be a 1D array")
+
+    # Reduce each sample to an integer sign: negative, zero, or positive.
+    signs = np.sign(s).astype(int)
+    # Locate zeros so propagation can be skipped when every sign is nonzero.
+    i_zeros = np.where(signs == 0)[0]
+    if i_zeros.size > 0:
+        # Fill zero signs before comparing adjacent samples for crossings.
+        signs_no_zeros = propagate_signs_over_zeros(signs)
+    else:
+        signs_no_zeros = signs
+
+    return find_zero_crossings_no_zeros(signs_no_zeros)
+
+    def test_find_zero_crossings():
+    """Check crossing results for normal, boundary, and invalid inputs.
+
+    These assertions cover representative behavior; they are not an exhaustive
+    test of every possible signal value.
+
+    Returns
+    -------
+    None
+        Returns normally when all assertions pass; otherwise raises
+        ``AssertionError``.
+    """
+    # Alternating signs exercise both crossing directions multiple times.
+    s = np.array([-1, 1, -1, 1, -1])
+    i_pos, i_neg = find_zero_crossings(s)
+    assert np.array_equal(i_pos, np.array([0, 2]))
+    assert np.array_equal(i_neg, np.array([1, 3]))
+
+    # A single transition in either direction returns only that direction's index.
+    i_pos, i_neg = find_zero_crossings([-1, 2, 3])
+    assert np.array_equal(i_pos, np.array([0]))
+    assert np.array_equal(i_neg, np.array([]))
+    i_pos, i_neg = find_zero_crossings([1, -2, -3])
+    assert np.array_equal(i_pos, np.array([]))
+    assert np.array_equal(i_neg, np.array([0]))
+
+    # Interior zeros inherit the preceding sign when determining crossings.
+    s = np.array([-1, 0, 0, 1, 0, -1])
+    i_pos, i_neg = find_zero_crossings(s)
+    assert np.array_equal(i_pos, np.array([2]))
+    assert np.array_equal(i_neg, np.array([4]))
+
+    # Leading zeros adopt the first nonzero sign; the remaining change is negative.
+    s = np.array([0, 0, 1, 0, -1, 0])
+    i_pos, i_neg = find_zero_crossings(s)
+    assert np.array_equal(i_pos, np.array([]))
+    assert np.array_equal(i_neg, np.array([3]))
+
+    # Signals with no sign change, including all-zero and all-negative inputs.
+    for s in (np.array([0, 0, 0]), np.array([-1, -2, -3])):
+        i_pos, i_neg = find_zero_crossings(s)
+        assert np.array_equal(i_pos, np.array([]))
+        assert np.array_equal(i_neg, np.array([]))
+
+    # Empty and single-sample signals cannot contain a crossing.
+    for s in (np.array([], dtype=int), np.array([-1]), np.array([0]), np.array([1])):
+        i_pos, i_neg = find_zero_crossings(s)
+        assert np.array_equal(i_pos, np.array([]))
+        assert np.array_equal(i_neg, np.array([]))
+
+    # The zero-propagation helper also accepts an empty array and does not mutate input.
+    empty_signs = np.array([], dtype=int)
+    assert np.array_equal(propagate_signs_over_zeros(empty_signs), empty_signs)
+    signs = np.array([0, -1, 0, 1, 0])
+    original_signs = signs.copy()
+    assert np.array_equal(
+        propagate_signs_over_zeros(signs), np.array([-1, -1, -1, 1, 1])
+    )
+    assert np.array_equal(signs, original_signs)
+
+    # Multidimensional input is rejected with the documented exception.
+    try:
+        find_zero_crossings(np.array([[1, -1], [-1, 1]]))
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Expected ValueError for a multidimensional signal")
+
+
+# Run the assertions when this cell is executed.
+try:
+    test_find_zero_crossings()
+    print("All tests passed.")
+except AssertionError:
+    raise
+
+
+def plot_signal(i: np.ndarray, s: np.ndarray, color: str = "blue"):
+    """Draw a signal and a horizontal zero line on the current axes.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates for the signal samples, typically sample indices or times.
+    s : np.ndarray
+        Signal values corresponding to ``i``.
+    color : str, optional
+        Line and marker color for the signal; defaults to ``"blue"``.
+
+    Returns
+    -------
+    None
+        Adds the signal and zero line to the current Matplotlib axes.
+    """
+    plt.axhline(y=0, color="gray", linestyle="-")  # before to be under the signal
+    plt.plot(i, s, ".-", markersize=5, linewidth=0.25, color=color, label="signal")
+    plt.ylabel("signal")
+    plt.xlabel("index")
+
+
+def plot_remarkable_points(t: np.ndarray, s: np.ndarray, format: str, label: str):
+    """Draw labeled signal points on the current axes.
+
+    Parameters
+    ----------
+    t : np.ndarray
+        Horizontal coordinates of the points.
+    s : np.ndarray
+        Vertical coordinates of the points, corresponding to ``t``.
+    format : str
+        Matplotlib format string specifying marker and color.
+    label : str
+        Legend label for the plotted points.
+
+    Returns
+    -------
+    None
+        Adds the points to the current Matplotlib axes.
+    """
+    plt.plot(t, s, format, markersize=10, label=label)
+
+
+def plot_positive_zero_crossings(i: np.ndarray, s: np.ndarray):
+    """Mark negative-to-positive crossings on the current axes.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the signal samples.
+    s : np.ndarray
+        One-dimensional signal used to locate the crossings; its length must
+        match ``i``.
+
+    Returns
+    -------
+    None
+        Adds the crossing markers to the current Matplotlib axes.
+    """
+    i_pos, _ = find_zero_crossings(s)
+    plot_remarkable_points(i[i_pos], s[i_pos], "^r", "positive zero crossings")
+
+
+def plot_negative_zero_crossings(i: np.ndarray, s: np.ndarray):
+    """Mark positive-to-negative crossings on the current axes.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the signal samples.
+    s : np.ndarray
+        One-dimensional signal used to locate the crossings; its length must
+        match ``i``.
+
+    Returns
+    -------
+    None
+        Adds the crossing markers to the current Matplotlib axes.
+    """
+    _, i_neg = find_zero_crossings(s)
+    plot_remarkable_points(i[i_neg], s[i_neg], "vy", "negative zero crossings")
+
+
+def plot_zero_crossings(i: np.ndarray, s: np.ndarray):
+    """Mark both crossing directions on the current axes.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the signal samples.
+    s : np.ndarray
+        One-dimensional signal used to locate the crossings; its length must
+        match ``i``.
+
+    Returns
+    -------
+    None
+        Adds positive- and negative-crossing markers to the current axes.
+    """
+    plot_positive_zero_crossings(i, s)
+    plot_negative_zero_crossings(i, s)
+
+
+def display_signal_and_crossings(i: np.ndarray, s: np.ndarray):
+    """Display a signal with both crossing directions, legend, and grid.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the signal samples.
+    s : np.ndarray
+        One-dimensional signal used to locate the crossings; its length must
+        match ``i``.
+
+    Returns
+    -------
+    None
+        Creates and displays a Matplotlib figure containing the signal and
+        its positive and negative zero-crossing markers.
+    """
+    plt.figure()
+    plot_signal(i, s)
+    plot_positive_zero_crossings(i, s)
+    plot_negative_zero_crossings(i, s)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.grid(True)
+    plt.show()
+
+
+# Example usage
+display_signal_and_crossings(index, signal)
+
