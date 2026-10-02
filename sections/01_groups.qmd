@@ -11,6 +11,35 @@ The assignment was developed in Python using Visual Studio Code (VS Code). Quart
 
 ## Division of tasks
 
+The assignment was divided among the three group members, with each student responsible for specific sections and their corresponding Quarto files.
+
+| Section | Quarto file |
+|---|---|
+| 01 | `01_groups.qmd` |
+| 02 | `02_1_zero_crossings.qmd` |
+| 02 | `02_2_explain_improve_code.qmd` |
+| 02 | `02_3_local_maxima_minima.qmd` |
+| 03 | `03_1_create_signal.qmd` |
+| 03 | `03_2_remarkable_points.qmd` |
+| 03 | `03_3_signal_frequency.qmd` |
+| 04 | `04_1_noisy_signal.qmd` |
+| 04 | `04_2_noisy_remarkable_points.qmd` |
+| 04 | `04_3_low_pass_filter.qmd` |
+| 05 | `05_critical_point.qmd` |
+
+Although each section was assigned to a specific student, Sections 1 and 5 were completed collaboratively.
+
+For Section 1 (Group workflow and division of tasks), all three members discussed and agreed on the organization of the assignment, the division of responsibilities, and the branching strategy. One student was responsible for documenting these decisions in Quarto.
+
+For Section 5 (Critical points and problem solving), the group collectively identified and discussed the three most critical problems encountered during the assignment. All members contributed to brainstorming possible solutions and agreed on the final answers, which were then documented by the assigned student.
+
+The responsibilities were allocated as follows:
+
+| Team member | Assigned sections |
+|---|---|
+| **Werner Binche** | 02, 05 |
+| **Ayeesha Waheed** | 03 |
+| **Jennifer Houmard** | 01, 04 |
 
 ## Branching strategy
 
