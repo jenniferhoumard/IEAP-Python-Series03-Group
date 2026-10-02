@@ -1,1 +1,216 @@
 ## Create the signal and plot it
+
+# 1. Task
+
+The task is to write functions that generate the signal **s** from the figure.
+It looks like a combination of two sine waves, so:
+
+$$
+s(t) = s_1(t) + s_2(t)
+$$
+
+I will build it step by step and plot after every step:
+
+1. Make the time axis
+2. Make and plot `s1`
+3. Make and plot `s2`
+4. Add them to get `s` and plot it
+5. Plot all three together
+
+# 2. Imports
+
+```{python}
+# numpy is used for the math (sine function and arrays of numbers)
+import numpy as np
+
+# matplotlib is used to draw the plots
+import matplotlib.pyplot as plt
+```
+
+# 3. Step 1: Time axis
+
+The signal runs from 0 to 2 seconds. I use a step of 0.01 s, which gives 200 points.
+
+```{python}
+def make_time(duration=2.0, step=0.01):
+    """Return time values from 0 up to (not including) `duration`."""
+    # np.arange makes a list of numbers: 0, 0.01, 0.02, ... up to just below 2.0
+    return np.arange(0, duration, step)
+
+# call the function to create our time axis
+t = make_time()
+
+# quick check that the time axis looks right
+print("Number of points:", len(t))    # should be 200
+print("First 5 values:", t[:5])       # should start at 0 and go up by 0.01
+```
+
+# 4. Step 2: A general sine wave function
+
+A sine wave is described by three numbers:
+
+$$
+x(t) = A \cdot \sin(2\pi f t + \varphi)
+$$
+
+- $A$ = amplitude (how tall the wave is)
+- $f$ = frequency in Hz (how many cycles per second)
+- $\varphi$ = phase (how much the wave is shifted)
+
+I write one function and reuse it for both waves.
+
+```{python}
+def sine_wave(t, amplitude, frequency, phase=0.0):
+    """Return amplitude * sin(2*pi*frequency*t + phase)."""
+    # 2 * pi * frequency converts "cycles per second" into radians per second,
+    # because the sine function works with radians.
+    # Multiplying by t gives the angle at each time point.
+    # Adding phase shifts the wave left or right.
+    # Multiplying by amplitude makes the wave taller or shorter.
+    return amplitude * np.sin(2 * np.pi * frequency * t + phase)
+```
+
+# 5. Step 3: First sine wave (s1)
+
+From the figure, the green wave:
+
+- goes between -1 and 1, so amplitude = **1**
+- repeats every 0.5 s, so frequency = 1 / 0.5 = **2 Hz**
+- starts at 0 and goes up, so phase = **0**
+
+```{python}
+# create s1 using the values we read from the figure
+# amplitude = 1 (height), frequency = 2 (cycles per second), phase = 0 (no shift)
+s1 = sine_wave(t, amplitude=1, frequency=2, phase=0)
+```
+
+Now let's plot it to check.
+
+```{python}
+# create a new figure of size 7 x 4 inches
+plt.figure(figsize=(7, 4))
+
+# draw s1 against time
+# marker="o" puts a small dot on every data point
+# markersize controls the dot size, linewidth makes the connecting line thin
+plt.plot(t, s1, color="green", marker="o", markersize=2, linewidth=0.3)
+
+# add a title and axis labels so the plot is easy to understand
+plt.title("s1: amplitude 1, frequency 2 Hz")
+plt.xlabel("time [s]")
+plt.ylabel("signal")
+
+# show grid lines in the background
+plt.grid(True)
+
+# display the plot
+plt.show()
+```
+
+It peaks at 1 and completes 4 cycles in 2 seconds, which matches the green curve in the figure.
+
+# 6. Step 4: Second sine wave (s2)
+
+From the figure, the orange wave:
+
+- goes between -2 and 2, so amplitude = **2**
+- repeats every 1 s, so frequency = **1 Hz**
+- does not start at 0 but at about 1.7, and it peaks early (around 0.09 s). So it is shifted by a phase of about **1 radian**.
+
+```{python}
+# create s2 using the values we read from the figure
+# amplitude = 2 (taller wave), frequency = 1 (slower wave),
+# phase = 1.0 (shifts the wave so it starts at about 1.7 instead of 0)
+s2 = sine_wave(t, amplitude=2, frequency=1, phase=1.0)
+```
+
+Let's plot it.
+
+```{python}
+# same plotting steps as for s1, only the data and color are different
+plt.figure(figsize=(7, 4))
+plt.plot(t, s2, color="orange", marker="o", markersize=2, linewidth=0.3)
+
+# title says which wave this is and what settings were used
+plt.title("s2: amplitude 2, frequency 1 Hz, phase 1 rad")
+plt.xlabel("time [s]")
+plt.ylabel("signal")
+plt.grid(True)
+plt.show()
+```
+
+It starts at about 1.7, peaks at 2 and has 2 cycles in 2 seconds, like the orange curve in the figure.
+
+# 7. Step 5: Combine them (s)
+
+Now I just add the two waves point by point:
+
+```{python}
+# adding two numpy arrays adds them element by element,
+# so at every time point: s = s1 + s2
+s = s1 + s2
+```
+
+Plot the combined signal:
+
+```{python}
+# plot the combined signal in blue, with slightly bigger dots
+# so it stands out (like in the original figure)
+plt.figure(figsize=(7, 4))
+plt.plot(t, s, color="blue", marker="o", markersize=3, linewidth=0.3)
+plt.title("s = s1 + s2")
+plt.xlabel("time [s]")
+plt.ylabel("signal")
+plt.grid(True)
+plt.show()
+```
+
+This looks more complicated than a single sine wave. The highs reach about 3 where both waves are high, and there are flatter dips around -1 where the waves partly cancel each other.
+
+# 8. Putting it into one function
+
+Now that each step works, I wrap the whole process in one function.
+
+```{python}
+def generate_signal(t):
+    """Return s1, s2 and their sum s."""
+    # first wave (green): small and fast
+    s1 = sine_wave(t, amplitude=1, frequency=2, phase=0)
+
+    # second wave (orange): bigger, slower and shifted
+    s2 = sine_wave(t, amplitude=2, frequency=1, phase=1.0)
+
+    # combined signal (blue): sum of the two waves
+    s = s1 + s2
+
+    # return all three so we can plot them later
+    return s1, s2, s
+
+# call the function; it gives back three arrays, one for each signal
+s1, s2, s = generate_signal(t)
+```
+
+# 9. Final plot: all three signals together
+
+```{python}
+# make one figure that will hold all three signals
+plt.figure(figsize=(7, 4.5))
+
+# draw each signal on the same plot
+# label="..." is the name that will appear in the legend
+# s1 and s2 use small dots, s uses bigger dots so it is easy to see
+plt.plot(t, s1, color="green",  marker="o", markersize=1.5, linewidth=0.3, label="s1")
+plt.plot(t, s2, color="orange", marker="o", markersize=1.5, linewidth=0.3, label="s2")
+plt.plot(t, s,  color="blue",   marker="o", markersize=3.5, linewidth=0.3, label="s")
+
+# axis labels and grid
+plt.xlabel("time [s]")
+plt.ylabel("signal")
+plt.grid(True)
+
+# show the legend outside the plot (top right) so it does not cover the curves
+plt.legend(loc="upper left", bbox_to_anchor=(1.05, 1))
+
+# display the final plot
+plt.show()
+```
