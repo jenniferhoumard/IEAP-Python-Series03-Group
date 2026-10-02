@@ -1,2 +1,28 @@
 
 ## Functions to find zero crossings and to plot them
+
+# Create the signal and index arrays
+We just copied the signal and index arrays from the series of exercises.
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+index =  [    0,    1,    2,    3,    4,    5,    6,    7,    8,    9   ]
+signal =  [   -1,    1,    2,    1,    0,   -1,    1,    2,    1,   -2   ]
+
+# make the index and signal as numpy arrays
+index = np.array(index)
+signal = np.array(signal)
+
+print("Type of index:", type(index))
+print("Type of signal:", type(signal))
+print("Index:", index)
+print("Signal:", signal)
+
+# plot the signal
+
+plt.plot(index, signal)
+plt.xlabel("Index")
+plt.ylabel("Signal")
+plt.title("Signal Plot")
+plt.show
