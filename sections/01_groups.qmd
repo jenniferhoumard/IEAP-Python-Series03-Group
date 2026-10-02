@@ -43,4 +43,24 @@ The responsibilities were allocated as follows:
 
 ## Branching strategy
 
+We adopted a feature-branch workflow, creating one branch for each of the five main sections of the assignment:
+
+1. Group workflow and division of tasks between group members
+
+2. Create functions to find and plot remarkable points
+
+3. Analyze a known signal
+
+4. Redo the analysis with a noisy signal
+
+5. Critical points and problem solving
+
+Each branch is dedicated to its corresponding section, allowing group members to work independently without modifying the same files.
+
+All branches originate from the main branch. Once a section is completed, the responsible student commits and pushes their changes to GitHub, then creates a pull request for review before merging into main.
+
+As the technical sections are dependent on one another, Sections 2, 3, and 4 are integrated in sequence to ensure that the functions and variables required by later sections are available. The documentation sections can be developed separately.
+
+This approach keeps the main branch as the integrated version of the assignment while maintaining a clear commit history and individual contributions.
+
 
