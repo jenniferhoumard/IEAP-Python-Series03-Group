@@ -2,6 +2,7 @@
 
 # LOCAL MAXIMA AND MINIMA
 
+```{python}
 def find_local_maxima_minima(s: np.ndarray):
     """Return indices of local maxima and minima in a one-dimensional signal.
 
@@ -120,5 +121,6 @@ plot_maxima_minima(index, signal)
 plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
 plt.grid(True)
 plt.show()
+```
 
 
