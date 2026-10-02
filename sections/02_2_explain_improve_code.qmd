@@ -1,1 +1,11 @@
 ## Explain and improve the previous code
+
+We've improved the previous code by adding some line to explain each commands.
+
+
+# What is the role of units tests provided for find_zero_crossings ?
+The unit tests provided for "find_zero_crossings" are used to check that the function works correctly for different types of input signals.
+
+They verify that the function correctly detects the zero-crossing points and gives the expected results. They also help detect errors in the implementation and ensure that changes to the function do not break its expected behaviour.
+
+Therefore, the unit tests are used to 'validate the correctness and reliability of "find_zero_crossings"'.
