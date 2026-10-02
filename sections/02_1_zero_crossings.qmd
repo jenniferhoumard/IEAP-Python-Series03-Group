@@ -4,11 +4,13 @@
 # Create the signal and index arrays
 We just copied the signal and index arrays from the series of exercises.
 
+```{python}
 import numpy as np
 import matplotlib.pyplot as plt
 
 index =  [    0,    1,    2,    3,    4,    5,    6,    7,    8,    9   ]
 signal =  [   -1,    1,    2,    1,    0,   -1,    1,    2,    1,   -2   ]
+
 
 # make the index and signal as numpy arrays
 index = np.array(index)
@@ -25,7 +27,7 @@ plt.plot(index, signal)
 plt.xlabel("Index")
 plt.ylabel("Signal")
 plt.title("Signal Plot")
-plt.show
+plt.show()
 
 
 ##Find zero crossing points
@@ -163,7 +165,7 @@ def find_zero_crossings(s: np.ndarray):
 
     return find_zero_crossings_no_zeros(signs_no_zeros)
 
-    def test_find_zero_crossings():
+def test_find_zero_crossings():
     """Check crossing results for normal, boundary, and invalid inputs.
 
     These assertions cover representative behavior; they are not an exhaustive
@@ -373,4 +375,5 @@ def display_signal_and_crossings(i: np.ndarray, s: np.ndarray):
 
 # Example usage
 display_signal_and_crossings(index, signal)
+```
 
