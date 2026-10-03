@@ -104,3 +104,41 @@ plt.show()
 **Graph interpretation**: After applying the Butterworth low-pass filter, the signal becomes smoother and closely follows the original signal. Most of the rapid fluctuations caused by white noise are reduced, while the main peaks, valleys, and overall shape are preserved. However, the filtered signal does not perfectly match the original because some noise remains.
 
 By reducing the small fluctuations, it improves the detection of remarkable points by removing many additional local maxima, minima, and zero crossings caused by noise.
+
+### c) Detect remarkable points in the filtered signal
+
+We now use the functions from Section 2 to detect local maxima, minima, and zero crossings in the filtered signal.
+
+The aim is to check whether removing noise reduces the additional remarkable points detected in the noisy signal.
+
+```{python}
+# Detect maxima and minima in the filtered signal
+i_max_f, i_min_f = find_local_maxima_minima(s_filtered)
+
+# Detect positive and negative zero crossings
+i_pos_f, i_neg_f = find_zero_crossings(s_filtered)
+
+# Create the figure
+plt.figure(figsize=(9, 5))
+
+# Plot the filtered signal
+plot_signal(t, s_filtered, color="green")
+
+# Mark the detected remarkable points
+plot_remarkable_points(t[i_max_f], s_filtered[i_max_f], "*r", "Local maxima")
+plot_remarkable_points(t[i_min_f], s_filtered[i_min_f], "*m", "Local minima")
+plot_remarkable_points(t[i_pos_f], s_filtered[i_pos_f], "*g", "Positive zero crossings")
+plot_remarkable_points(t[i_neg_f], s_filtered[i_neg_f], "*y", "Negative zero crossings")
+
+# Add title, labels, legend, and grid
+plt.title("Remarkable points of the filtered signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(loc="upper right")
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation**: After filtering, the signal is much smoother, with fewer local maxima and minima compared to the noisy signal. Most of the additional peaks and valleys caused by noise have disappeared, while the main remarkable points are preserved.
+
+Detection functions can now identify the meaningful peaks, valleys, and zero crossings more easily, with fewer unwanted detections caused by noise.
