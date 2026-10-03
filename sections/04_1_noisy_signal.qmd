@@ -15,7 +15,7 @@ and minima.
 
 The noisy signal is obtained by adding random noise to the original signal:
 
-$s_{noisy} = s_{original} + noise
+$s_{noisy} = s_{original} + noise$
 
 ### a) Define the noise level
 
@@ -37,6 +37,37 @@ signal_amplitude = np.max(s) - np.min(s)
 # Set the noise standard deviation to 20% of the amplitude
 noise_std = 0.2 * signal_amplitude
 ```
+
+### b) Generate and add white noise
+
+We use `np.random.normal()` to generate random noise values that follow
+a **normal distribution**. This means that values close to zero are more
+likely to occur, while large positive or negative values are less common.
+
+The function uses three parameters:
+
+1. **Mean (`0`):** The noise values are centered around zero, so they can
+   be positive or negative.
+2. **Standard deviation (`noise_std`):** Controls how much the noise
+   values vary. About 68% of the values fall within one standard
+   deviation of zero, while larger fluctuations are less common.
+3. **Number of samples (`len(s)`):** Generates one random noise value
+   for each point of the original signal.
+
+```{python}
+# Generate one random noise value for each point of the original signal
+noise = np.random.normal(0, noise_std, len(s))
+
+# Add the random noise values to the original signal
+s_noisy = s + noise
+
+# Print the first 5 values to compare
+print("Original signal:", s[:5])
+print("Random noise:   ", noise[:5])
+print("Noisy signal:   ", s_noisy[:5])
+```
+
+
 
 
 
