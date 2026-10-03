@@ -88,8 +88,20 @@ plt.grid(True)
 plt.show()
 ```
 
+Now we add a thin line (lw = 0.25) connecting the dots to better visualize the noisy signal
 
+```
+# Create the figure
+plt.figure(figsize=(8, 4))
 
+# Plot the noise as blue dots connected by a thin line
+plt.plot(t, noise, "o-", markersize=4, linewidth=0.25)
 
-
+# Add title, axis labels, and grid
+plt.title("Generated white noise")
+plt.xlabel("Time (s)")
+plt.ylabel("Noise amplitude")
+plt.grid(True)
+plt.show()
+```
 
