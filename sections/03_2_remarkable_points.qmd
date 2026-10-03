@@ -1,6 +1,6 @@
 ## Plot the remarkable points
 
-# 1. Task
+# Task
 
 Once the signal is created, I find its remarkable points and plot them. I reuse the functions created by my team member in previous exercises instead of writing them again.
 
@@ -11,7 +11,7 @@ The remarkable points are:
 - positive zero crossings (the signal goes from negative to positive)
 - negative zero crossings (the signal goes from positive to negative)
 
-# 2. Reusing earlier functions
+# Reusing earlier functions
 
 We will reuse the functions created in previous exercises by my team member.
 
@@ -61,7 +61,7 @@ The functions I reuse are:
 - `find_local_maxima_minima` to find the peaks and valleys
 - `find_zero_crossings` and `plot_zero_crossings` for the zero crossings
 
-# 3. Step 1: Create the signal
+# Step 1: Create the signal
 
 ```{python}
 # time axis from 0 to 2 seconds
@@ -88,7 +88,7 @@ plt.show()
 
 This is the signal I want to analyse.
 
-# 4. Step 2: Local maxima and minima
+# Step 2: Local maxima and minima
 
 `find_local_maxima_minima` gives me the indices (positions) of the peaks and the valleys.
 
@@ -123,7 +123,7 @@ plt.show()
 The stars sit on the tops of the peaks and the bottoms of the valleys, so the function works.
 The small bump around -1 gives one extra maximum and one extra minimum in each repetition of the signal.
 
-# 5. Step 3: Zero crossings
+# Step 3: Zero crossings
 
 `find_zero_crossings` gives the indices just before the signal changes sign.
 
@@ -152,7 +152,7 @@ plt.show()
 
 The triangles are placed where the signal passes through the gray zero line.
 
-# 6. Step 4: All remarkable points together
+# Step 4: All remarkable points together
 
 To keep things clean, I put everything in one function that I can reuse for any signal.
 
@@ -181,7 +181,7 @@ def display_remarkable_points(t, s):
     plt.show()
 ```
 
-# 7. Final result
+# Final result
 
 ```{python}
 display_remarkable_points(t, s)
