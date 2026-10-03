@@ -67,6 +67,27 @@ print("Random noise:   ", noise[:5])
 print("Noisy signal:   ", s_noisy[:5])
 ```
 
+### c) Plot the noisy signal
+
+We first plot the generated noise alone to visualize how the random values
+
+**Graph interpretation**: The noise values are randomly scattered above and below zero, with no clear repeating pattern. This is expected because the noise values were generated independently using a normal distribution centered at zero.
+
+```{python}
+# Create the figure
+plt.figure(figsize=(8, 4))
+
+# Plot the noise as blue dots without connecting lines
+plt.plot(t, noise, "o", markersize=4)
+
+# Add title, axis labels, and grid
+plt.title("Generated white noise")
+plt.xlabel("Time (s)")
+plt.ylabel("Noise amplitude")
+plt.grid(True)
+plt.show()
+```
+
 
 
 
