@@ -1,15 +1,26 @@
-## Critical point 1
+## Critical point 1: Managing generated HTML files
 
 ### Problem encountered
 
+Each group member worked on a separate .qmd file and needed to render it as HTML to check the code, explanations, and graphs without rendering the entire main document every time.
+
+However, rendering individual sections generated additional HTML files and folders that appeared as changes in GitHub Desktop. We did not want to manually exclude these files every time we made a commit because they were only generated for preview purposes.
 
 ### Solution implemented
 
+We updated the .gitignore file to automatically ignore the generated HTML files and temporary Quarto folders.
 
+# Quarto generated files
+*_files/
+.quarto/
+sections/*.html
+
+This allowed each member to preview their work independently without adding unnecessary generated files to the Git repository, keeping commits cleaner and easier to manage.
 
 ## Critical point 2
 
 ### Problem encountered
+
 
 
 ### Solution implemented
