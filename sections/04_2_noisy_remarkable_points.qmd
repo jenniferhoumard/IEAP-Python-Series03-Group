@@ -18,10 +18,11 @@ A remarkable point is identified as follows:
 | Negative zero crossing | Signal changes from positive to negative |
 
 ```{python}
-# Enable interactive plotting
+#| eval: false
+
+# Enable interactive plotting to zoom in and inspect remarkable points
 %matplotlib widget
 
-# Plot the noisy signal using the existing function
 plt.figure(figsize=(9, 4))
 plot_signal(t, s_noisy)
 
@@ -31,5 +32,40 @@ plt.grid(True)
 plt.show()
 ```
 
+### b) Detect and plot the remarkable points
 
+We now reuse the functions from Section 2 to automatically detect the local maxima, minima, and positive and negative zero crossings of the noisy signal.
+
+```{python}
+# Find the local maxima and minima of the noisy signal
+i_max, i_min = find_local_maxima_minima(s_noisy)
+
+# Find the positive and negative zero crossings
+i_pos, i_neg = find_zero_crossings(s_noisy)
+
+# Plot the results
+plt.figure(figsize=(9, 5))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal")
+
+# Plot the noisy signal in blue
+plot_signal(t, s_noisy, color="blue")
+plt.gca().lines[-1].set_label("Noisy signal")
+
+# Mark the detected remarkable points
+plot_remarkable_points(t[i_max], s_noisy[i_max], "*r", "Local maxima")
+plot_remarkable_points(t[i_min], s_noisy[i_min], "*m", "Local minima")
+plot_remarkable_points(t[i_pos], s_noisy[i_pos], "*g", "Positive zero crossings")
+plot_remarkable_points(t[i_neg], s_noisy[i_neg], "*y", "Negative zero crossings")
+
+# Add title, labels, legend, and grid
+plt.title("Remarkable points of the noisy signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
 
