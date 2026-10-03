@@ -49,9 +49,10 @@ def load_qmd_code(filename):
         plt.close("all")
 
 # the order matters: the maxima/minima file needs the zero-crossing functions
-load_qmd_code("02_1_zero_crossings.qmd")
-load_qmd_code("03_1_create_signal.qmd")
-load_qmd_code("02_3_local_maxima_minima.qmd")
+# Load earlier files from the sections folder
+load_qmd_code("sections/02_1_zero_crossings.qmd")
+load_qmd_code("sections/03_1_create_signal.qmd")
+load_qmd_code("sections/02_3_local_maxima_minima.qmd")
 ```
 
 The functions I reuse are:

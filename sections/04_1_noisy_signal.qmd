@@ -4,7 +4,7 @@ Overview: The aim is to investigate how adding noise affects the detection of re
 |---|---|---|
 | 4.1 Create the noisy signal | Generate white noise, add it to the original signal, and plot it. | Original signal from Section 3.1 and `plot_signal()` from Section 2. |
 | 4.2 Remarkable points | Detect zero crossings, local maxima, and minima, and analyze the effects of noise. | Detection and plotting functions from Section 2 and frequency calculation from Section 3.3. |
-| 4.3 Low-pass filter | Apply a Butterworth filter and compare the filtered and noisy signals. | `butter`, `filtfilt`, and previous analysis functions. |
+| 4.3 Low-pass filter | Apply a Butterworth filter and compare the filtered and noisy signals. | `butter`, `filtfilt`, and previous analysis functions.
 
 ## Create the noisy signal and plot it
 

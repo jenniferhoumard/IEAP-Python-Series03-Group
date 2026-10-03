@@ -18,6 +18,13 @@ format:
 jupyter: python3
 ---
 
+```{python}
+# Import libraries used throughout the assignment
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import butter, filtfilt
+```
+
 # 1. Group workflow and division of tasks between group members
 
 {{< include sections/01_groups.qmd >}}
