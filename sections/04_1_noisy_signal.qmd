@@ -40,9 +40,9 @@ noise_std = 0.2 * signal_amplitude
 
 ### b) Generate and add white noise
 
-We use `np.random.normal()` to generate random noise values that follow
-a **normal distribution**. This means that values close to zero are more
-likely to occur, while large positive or negative values are less common.
+We use `np.random.normal()` to generate random noise values that follow a **normal distribution**. This means that values close to zero are more likely to occur, while large positive or negative values are less common.
+
+We use a normal distribution because it can better simulate real measurement errors, such as sensor noise. Small fluctuations around zero are more common, while large fluctuations are less likely. This is useful for studying how noise affects the detection of remarkable points.
 
 The function uses three parameters:
 
@@ -90,7 +90,7 @@ plt.show()
 
 Now we add a thin line (lw = 0.25) connecting the dots to better visualize the noisy signal
 
-```
+```{python}
 # Create the figure
 plt.figure(figsize=(8, 4))
 
@@ -119,7 +119,7 @@ plt.gca().lines[-1].set_label("Original signal") # gets the current graph and ac
 
 # Plot the noisy signal in orange
 plot_signal(t, s_noisy, color="orange")
-plt.gca().lines[-1].set_label("Signal + noise") plot_signal and renames it 
+plt.gca().lines[-1].set_label("Signal + noise")
 
 # Add title, labels, legend, and grid
 plt.title("Original signal vs. noisy signal")
