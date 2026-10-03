@@ -69,3 +69,21 @@ plt.grid(True)
 plt.show()
 ```
 
+**Graph interpretation**: The functions detect the local maxima, minima, and zero crossings in the noisy signal. However, the added noise creates many small fluctuations, resulting in extra peaks, valleys, and sometimes zero crossings that were not present in the original signal.
+
+This happens because the functions detect changes between neighboring points without knowing whether they come from the original signal or from noise.
+
+This is important because noise makes it harder to identify the meaningful remarkable points of the original signal, leading to extra detections and potentially inaccurate results. Therefore, filtering the noise may help improve the detection of these points.
+
+### c) Check the manually identified remarkable points against the detected ones
+
+Compare these results with the points identified visually on the interactive graph. Note: the zero-crossing function returns the sample just before each sign change, rather than an interpolated crossing time.
+
+```{python}
+# Print the first 5 detected points of each type
+print("Local maxima (s):", np.round(t[i_max][:5], 2))
+print("Local minima (s):", np.round(t[i_min][:5], 2))
+print("Positive zero crossings (s):", np.round(t[i_pos][:5], 2))
+print("Negative zero crossings (s):", np.round(t[i_neg][:5], 2))
+```
+
