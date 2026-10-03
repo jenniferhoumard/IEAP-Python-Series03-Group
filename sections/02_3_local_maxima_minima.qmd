@@ -1,1 +1,126 @@
 ## Create new functions to find the local maxima and minima
+
+# LOCAL MAXIMA AND MINIMA
+
+```{python}
+def find_local_maxima_minima(s: np.ndarray):
+    """Return indices of local maxima and minima in a one-dimensional signal.
+
+    Extrema are found where the sign of the first difference changes:
+    positive-to-negative for maxima and negative-to-positive for minima.
+    For flat extrema, the zero-crossing policy selects the plateau's last
+    sample. Endpoints are not considered extrema.
+
+    Parameters
+    ----------
+    s : np.ndarray
+        One-dimensional array of signal samples.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Indices of local maxima, then local minima.
+    """
+    # Differences represent the signal's change from one sample to the next.
+    ds = np.diff(s)
+
+    # The crossing helper returns negative-to-positive first (minima of ds),
+    # followed by positive-to-negative (maxima of ds).
+    i_min, i_max = find_zero_crossings(ds)
+
+    # A change between difference entries occurs at the intervening signal sample.
+    i_max = i_max + 1
+    i_min = i_min + 1
+
+    return i_max, i_min
+
+
+def plot_local_maxima(i: np.ndarray, s: np.ndarray):
+    """Plot local maxima using orange circle markers.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the samples in ``s``.
+    s : np.ndarray
+        One-dimensional signal.
+
+    Returns
+    -------
+    None
+        Adds the local maxima to the current Matplotlib axes.
+    """
+    i_max, _ = find_local_maxima_minima(s)
+    plot_remarkable_points(i[i_max], s[i_max], "or", "local maxima")
+
+
+def plot_local_minima(i: np.ndarray, s: np.ndarray):
+    """Plot local minima using blue circle markers.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the samples in ``s``.
+    s : np.ndarray
+        One-dimensional signal.
+
+    Returns
+    -------
+    None
+        Adds the local minima to the current Matplotlib axes.
+    """
+    _, i_min = find_local_maxima_minima(s)
+    plot_remarkable_points(i[i_min], s[i_min], "ob", "local minima")
+
+
+def plot_maxima_minima(i: np.ndarray, s: np.ndarray):
+    """Plot both local maxima and minima on the current axes.
+
+    Parameters
+    ----------
+    i : np.ndarray
+        Coordinates corresponding to the samples in ``s``.
+    s : np.ndarray
+        One-dimensional signal.
+
+    Returns
+    -------
+    None
+        Adds maxima and minima markers to the current Matplotlib axes.
+    """
+    plot_local_maxima(i, s)
+    plot_local_minima(i, s)
+
+
+def test_find_local_maxima_minima():
+    """Check extrema indices for the example signal and simple edge cases."""
+    # The example has peaks at indices 2 and 7, and a valley at index 5.
+    i_max, i_min = find_local_maxima_minima(signal)
+    assert np.array_equal(i_max, np.array([2, 7]))
+    assert np.array_equal(i_min, np.array([5]))
+
+    # Short and monotonic signals contain no interior extrema.
+    for samples in (np.array([], dtype=int), np.array([1]), np.array([1, 2]), np.array([1, 2, 3])):
+        i_max, i_min = find_local_maxima_minima(samples)
+        assert np.array_equal(i_max, np.array([], dtype=int))
+        assert np.array_equal(i_min, np.array([], dtype=int))
+
+    # A flat peak is represented by its last sample under zero propagation.
+    i_max, i_min = find_local_maxima_minima(np.array([0, 1, 2, 2, 1]))
+    assert np.array_equal(i_max, np.array([3]))
+    assert np.array_equal(i_min, np.array([], dtype=int))
+
+
+test_find_local_maxima_minima()
+print("Local maxima/minima tests passed.")
+
+# Display the signal with maxima and minima.
+plt.figure()
+plot_signal(index, signal)
+plot_maxima_minima(index, signal)
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+

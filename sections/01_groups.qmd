@@ -1,11 +1,66 @@
 
 ## GitHub repository
 
-GitHub Repository: https://github.com/jenniferhoumard/IEAP-Python-Series03-Group
+The group assignment was developed in Python using Visual Studio Code (VS Code) and managed through a public GitHub repository:
+
+https://github.com/jenniferhoumard/IEAP-Python-Series03-Group
+
+To organize the group work, one member initially created the GitHub repository, added the other members as collaborators, and prepared the master Quarto document and separate subsection files (.qmd). The headings and subsections were predefined according to the assignment requirements so that each member had a clear structure to follow and knew exactly where to add their work. This also allowed members to work on their assigned files independently, reducing overlap and potential conflicts.
+
+The assignment was developed in Python using Visual Studio Code (VS Code). Quarto (.qmd) files were used to combine Python code, explanations, tables, and plots in the same document. The master Quarto file brings together all the subsections into a single report with consistent headings, automatic numbering, and a table of contents.
 
 ## Division of tasks
 
+The assignment was divided among the three group members, with each student responsible for specific sections and their corresponding Quarto files.
+
+| Section | Quarto file |
+|---|---|
+| 01 | `01_groups.qmd` |
+| 02 | `02_1_zero_crossings.qmd` |
+| 02 | `02_2_explain_improve_code.qmd` |
+| 02 | `02_3_local_maxima_minima.qmd` |
+| 03 | `03_1_create_signal.qmd` |
+| 03 | `03_2_remarkable_points.qmd` |
+| 03 | `03_3_signal_frequency.qmd` |
+| 04 | `04_1_noisy_signal.qmd` |
+| 04 | `04_2_noisy_remarkable_points.qmd` |
+| 04 | `04_3_low_pass_filter.qmd` |
+| 05 | `05_critical_point.qmd` |
+
+Although each section was assigned to a specific student, Sections 1 and 5 were completed collaboratively.
+
+For Section 1 (Group workflow and division of tasks), all three members discussed and agreed on the organization of the assignment, the division of responsibilities, and the branching strategy. One student was responsible for documenting these decisions in Quarto.
+
+For Section 5 (Critical points and problem solving), the group collectively identified and discussed the three most critical problems encountered during the assignment. All members contributed to brainstorming possible solutions and agreed on the final answers, which were then documented by the assigned student.
+
+The responsibilities were allocated as follows:
+
+| Team member | Assigned sections |
+|---|---|
+| **Werner Binche** | 02, 05 |
+| **Ayeesha Waheed** | 03 |
+| **Jennifer Houmard** | 01, 04 |
 
 ## Branching strategy
+
+We adopted a feature-branch workflow, creating one branch for each of the five main sections of the assignment:
+
+1. Group workflow and division of tasks between group members
+
+2. Create functions to find and plot remarkable points
+
+3. Analyze a known signal
+
+4. Redo the analysis with a noisy signal
+
+5. Critical points and problem solving
+
+Each branch is dedicated to its corresponding section, allowing group members to work independently without modifying the same files.
+
+All branches originate from the main branch. Once a section is completed, the responsible student commits and pushes their changes to GitHub, then creates a pull request for review before merging into main.
+
+As the technical sections are dependent on one another, Sections 2, 3, and 4 are integrated in sequence to ensure that the functions and variables required by later sections are available. The documentation sections can be developed separately.
+
+This approach keeps the main branch as the integrated version of the assignment while maintaining a clear commit history and individual contributions.
 
 

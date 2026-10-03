@@ -1,1 +1,239 @@
 ## Use the remarkable points to find the frequency of the signal
+
+# Task
+
+Use the remarkable points to find the frequency of the signal. The idea is simple:
+
+- find the zero crossing points that have the **same slope** (all the positive ones, or all the negative ones)
+- the distance between two neighbouring ones is **one period** of the signal
+- the frequency is one divided by the period
+
+$$
+f = \frac{1}{T}
+$$
+
+# Reusing earlier functions
+
+I load only the Python code of my earlier files, so their text and plots do not appear in this document.
+
+```{python}
+#| include: false
+
+import re
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def load_qmd_code(filename):
+    """Run all the python code chunks of a .qmd file, without rendering the file."""
+    # read the whole .qmd file as text
+    text = Path(filename).read_text()
+
+    # find every ```{python} ... ``` chunk and keep only the code inside
+    chunks = re.findall(r"```\{python\}[^\n]*\n(.*?)```", text, flags=re.DOTALL)
+
+    # run the chunks without displaying the plots or prints from the source document
+    original_show = plt.show
+    plt.show = lambda *args, **kwargs: None
+    try:
+        with redirect_stdout(StringIO()):
+            exec("\n\n".join(chunks), globals())
+    finally:
+        plt.show = original_show
+        plt.close("all")
+
+# the zero-crossing functions and the signal functions are needed here
+load_qmd_code("02_1_zero_crossings.qmd")
+load_qmd_code("03_1_create_signal.qmd")
+```
+
+The functions I reuse are:
+
+- `make_time` and `generate_signal` to create the signal
+- `find_zero_crossings` to find the zero crossing points
+- `plot_signal` and `plot_remarkable_points` to draw things
+
+# Step 1: Create the signal
+
+```{python}
+# time axis from 0 to 2 seconds
+t = make_time()
+
+# s1 and s2 are the two sine waves, s is their sum
+s1, s2, s = generate_signal(t)
+```
+
+# Step 2: Zero crossings with the same slope
+
+`find_zero_crossings` returns two arrays of indices:
+
+- `i_pos`: crossings where the signal goes from negative to positive (positive slope)
+- `i_neg`: crossings where the signal goes from positive to negative (negative slope)
+
+```{python}
+i_pos, i_neg = find_zero_crossings(s)
+
+print("Indices of positive zero crossings:", i_pos)
+print("Indices of negative zero crossings:", i_neg)
+```
+
+Let's plot only the positive crossings first.
+
+```{python}
+plt.figure()
+plot_signal(t, s)
+
+# red triangles up: crossings with positive slope
+plot_remarkable_points(t[i_pos], s[i_pos], "^r", "positive zero crossings")
+
+plt.xlabel("time [s]")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+Now only the negative crossings.
+
+```{python}
+plt.figure()
+plot_signal(t, s)
+
+# yellow triangles down: crossings with negative slope
+plot_remarkable_points(t[i_neg], s[i_neg], "vy", "negative zero crossings")
+
+plt.xlabel("time [s]")
+plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.grid(True)
+plt.show()
+```
+
+In both plots the points are spaced evenly. The distance between two neighbouring points of the same kind is one period of the signal.
+
+# Step 3: Distance between the crossings
+
+First I measure the distance in **samples** (number of points between two crossings). `np.diff` gives the difference between neighbours.
+
+```{python}
+# distance in samples between neighbouring crossings of the same slope
+delta_pos = np.diff(i_pos)
+delta_neg = np.diff(i_neg)
+
+print("delta_zero_crossing_pos (samples):", delta_pos)
+print("delta_zero_crossing_neg (samples):", delta_neg)
+```
+
+There are 2 positive and 2 negative crossings, so there is one distance for each. Both are 100 samples.
+
+# Step 4: Period and frequency
+
+To change samples into seconds I use the time vector. The time at each crossing is `t[i_pos]`, and the difference between neighbours is the period.
+
+```{python}
+# period in seconds: time between neighbouring crossings of the same slope
+period_pos = np.mean(np.diff(t[i_pos]))
+period_neg = np.mean(np.diff(t[i_neg]))
+
+# the signal period is the average of the two estimates
+period = (period_pos + period_neg) / 2
+
+# frequency is 1 / period
+frequency = 1 / period
+
+print("Period from positive crossings:", round(period_pos, 6), "s")
+print("Period from negative crossings:", round(period_neg, 6), "s")
+print("Signal period                 :", round(period, 6), "s")
+print("Signal frequency              :", round(frequency, 6), "Hz")
+```
+
+# Step 5: Put it all in one function
+
+Now I put the steps together in one function. It takes the time vector and the signal and returns a dictionary with all the information.
+
+```{python}
+def compute_frequency_from_zero_crossings(t, s):
+    """Estimate the period and frequency of a signal from its zero crossings.
+
+    Parameters
+    ----------
+    t : np.ndarray
+        Time vector.
+    s : np.ndarray
+        Signal vector.
+
+    Returns
+    -------
+    dict
+        Distances between crossings (in samples), periods (in seconds)
+        and frequency (in Hz).
+    """
+    # 1. find the zero crossings with positive and negative slope
+    i_pos, i_neg = find_zero_crossings(s)
+
+    # 2. we need at least 2 crossings of the same kind to measure a distance
+    if len(i_pos) < 2 or len(i_neg) < 2:
+        raise ValueError("Not enough zero crossings to compute a period")
+
+    # 3. distance between neighbouring crossings, in samples
+    delta_pos = np.diff(i_pos)
+    delta_neg = np.diff(i_neg)
+
+    # 4. distance in seconds = period (average if there are several distances)
+    period_pos = np.mean(np.diff(t[i_pos]))
+    period_neg = np.mean(np.diff(t[i_neg]))
+
+    # 5. final period is the average of the two, frequency is 1 / period
+    period = (period_pos + period_neg) / 2
+    frequency = 1 / period
+
+    # 6. return everything in a dictionary
+    return {
+        "delta_zero_crossing_pos (samples)": delta_pos,
+        "delta_zero_crossing_neg (samples)": delta_neg,
+        "signal_period_pos (s)": period_pos,
+        "signal_period_neg (s)": period_neg,
+        "signal_period (s)": period,
+        "signal_frequency (Hz)": frequency,
+    }
+```
+
+A small function to print the dictionary in a clean way:
+
+```{python}
+def print_frequency_info(info):
+    """Print the dictionary returned by compute_frequency_from_zero_crossings."""
+    for key, value in info.items():
+        # round the numbers so tiny float errors (1.0000000000000002) are hidden
+        if isinstance(value, np.ndarray):
+            text = str(value)
+        else:
+            text = str(round(float(value), 6))
+
+        # right-align the names so the colons line up
+        print(f"{key:>35} : {text}")
+```
+
+# Final result
+
+```{python}
+info = compute_frequency_from_zero_crossings(t, s)
+print_frequency_info(info)
+```
+
+The result is a period of 1 s and a frequency of 1 Hz. This makes sense: `s` is the sum of `s1` (2 Hz) and `s2` (1 Hz). The pattern repeats every 1 s, which is the period of the slower wave.
+
+# Extra check with a simple signal
+
+To be sure the function works in general, I test it on a single sine wave with a known frequency of 2 Hz. The period should be 0.5 s.
+
+```{python}
+# a sine wave of 2 Hz (phase 0.3 so it does not start exactly at zero)
+s_test = sine_wave(t, amplitude=1, frequency=2, phase=0.3)
+
+info_test = compute_frequency_from_zero_crossings(t, s_test)
+print_frequency_info(info_test)
+```
+
+The function finds a frequency of 2 Hz, so it works for other signals too.
