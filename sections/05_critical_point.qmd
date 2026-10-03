@@ -17,14 +17,25 @@ sections/*.html
 
 This allowed each member to preview their work independently without adding unnecessary generated files to the Git repository, keeping commits cleaner and easier to manage.
 
-## Critical point 2
+## Critical point 2: Reusing functions and libraries across sections
 
 ### Problem encountered
 
+Our assignment was divided into separate .qmd files, but later sections needed to reuse functions and variables from earlier sections. Although the files were included in the correct order in the main Quarto document, we encountered errors when trying to reuse this code.
 
+For example, Section 4 needed the original signal (s) and time vector (t) from Section 3, but these variables were not available because the latest Section 3 changes had not yet been merged into our working branch.
+
+After updating the branch, we also encountered a FileNotFoundError because the load_qmd_code() function was looking for earlier .qmd files in the wrong directory.
 
 ### Solution implemented
 
+We updated our working branch with the latest completed sections from main so that the required functions and variables were available.
+
+We then corrected the file paths in load_qmd_code() by adding sections/ before the filenames, allowing Python to locate and execute the earlier files.
+
+We also added shared library imports to the main Quarto document so they were available throughout the assignment.
+
+These changes allowed us to reuse our teammates' functions instead of rewriting them and ensured that the sections worked together when rendering the full document.
 
 
 ## Critical point 3
