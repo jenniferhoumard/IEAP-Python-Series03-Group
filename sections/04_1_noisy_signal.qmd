@@ -6,4 +6,38 @@ Overview: The aim is to investigate how adding noise affects the detection of re
 | 4.2 Remarkable points | Detect zero crossings, local maxima, and minima, and analyze the effects of noise. | Detection and plotting functions from Section 2 and frequency calculation from Section 3.3. |
 | 4.3 Low-pass filter | Apply a Butterworth filter and compare the filtered and noisy signals. | `butter`, `filtfilt`, and previous analysis functions. |
 
+## Create the noisy signal and plot it
+
+**Objective:** To simulate measurement errors or disturbances, we add white
+noise to the original signal from Section 3. White noise introduces random
+fluctuations that can affect the detection of zero crossings, local maxima,
+and minima.
+
+The noisy signal is obtained by adding random noise to the original signal:
+
+$s_{noisy} = s_{original} + noise
+
+### a) Define the noise level
+
+We use `np.random.normal()` to generate white noise, where the random
+values follow a normal distribution.
+
+First, we need to define how much the noise can fluctuate:
+
+1. **Calculate the peak-to-peak amplitude:** Subtract the minimum value
+   from the maximum value of the original signal.
+2. **Set the noise level to 20%:** We use 20% of the peak-to-peak amplitude
+   as the **standard deviation**, which controls how spread out the random
+   noise values are around zero.
+
+```{python}
+# Calculate the peak-to-peak amplitude of the original signal
+signal_amplitude = np.max(s) - np.min(s)
+
+# Set the noise standard deviation to 20% of the amplitude
+noise_std = 0.2 * signal_amplitude
+```
+
+
+
 
