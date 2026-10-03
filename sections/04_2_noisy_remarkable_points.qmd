@@ -23,7 +23,10 @@ A remarkable point is identified as follows:
 # Enable interactive plotting to zoom in and inspect remarkable points
 %matplotlib widget
 
-plt.figure(figsize=(9, 4))
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
 plot_signal(t, s_noisy)
 
 plt.title("Noisy signal")
@@ -44,7 +47,11 @@ i_max, i_min = find_local_maxima_minima(s_noisy)
 i_pos, i_neg = find_zero_crossings(s_noisy)
 
 # Plot the results
-plt.figure(figsize=(9, 5))
+
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
 
 # Plot the original signal in light gray
 plot_signal(t, s, color="lightgray")
@@ -64,7 +71,7 @@ plot_remarkable_points(t[i_neg], s_noisy[i_neg], "*y", "Negative zero crossings"
 plt.title("Remarkable points of the noisy signal")
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude")
-plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+plt.legend(loc="upper right", fontsize=8)
 plt.grid(True)
 plt.show()
 ```

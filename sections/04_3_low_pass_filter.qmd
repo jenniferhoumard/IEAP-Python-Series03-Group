@@ -77,8 +77,12 @@ Using filtfilt() helps preserve their timing, making it easier to compare the or
 We plot the original, noisy, and filtered signals together to see how effectively the Butterworth filter reduces the noise while preserving the original shape of the signal.
 
 ```{python}
+
+#| out-width: "85%"
+#| fig-align: center
+
 # Create the figure
-plt.figure(figsize=(9, 5))
+plt.figure(figsize=(8, 5))
 
 # Plot the original signal in light gray
 plot_signal(t, s, color="lightgray")
@@ -96,7 +100,7 @@ plt.gca().lines[-1].set_label("Filtered signal")
 plt.title("Original vs. noisy vs. filtered signal")
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude")
-plt.legend(loc="upper right")
+plt.legend(loc="upper right", fontsize=8)
 plt.grid(True)
 plt.show()
 ```
@@ -119,7 +123,11 @@ i_max_f, i_min_f = find_local_maxima_minima(s_filtered)
 i_pos_f, i_neg_f = find_zero_crossings(s_filtered)
 
 # Create the figure
-plt.figure(figsize=(9, 5))
+
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
 
 # Plot the filtered signal
 plot_signal(t, s_filtered, color="green")
@@ -134,7 +142,7 @@ plot_remarkable_points(t[i_neg_f], s_filtered[i_neg_f], "*y", "Negative zero cro
 plt.title("Remarkable points of the filtered signal")
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude")
-plt.legend(loc="upper right")
+plt.legend(loc="upper right", fontsize=8)
 plt.grid(True)
 plt.show()
 ```
