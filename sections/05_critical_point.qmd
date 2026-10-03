@@ -42,6 +42,12 @@ These changes allowed us to reuse our teammates' functions instead of rewriting 
 
 ### Problem encountered
 
+While organizing our GitHub repository, we renamed the branch for Section 1. However, this caused the original pull request to close automatically, even though the section was not yet merged into main.
+
+This created confusion because the completed work was still available, but the original pull request could no longer be used to review and merge it.
 
 ### Solution implemented
 
+We created a new pull request using the correct branch and checked that it contained the intended changes before merging.
+
+This showed us the importance of keeping branch names consistent and avoiding unnecessary branch renaming while pull requests are open, especially when several group members are contributing to the same repository.
