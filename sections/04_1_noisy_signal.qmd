@@ -75,7 +75,7 @@ We first plot the generated noise alone to visualize how the random values
 
 ```{python}
 # Create the figure
-plt.figure(figsize=(8, 4))
+plt.figure(figsize=(7, 4))
 
 # Plot the noise as blue dots without connecting lines
 plt.plot(t, noise, "o", markersize=4)
@@ -92,7 +92,7 @@ Now we add a thin line (lw = 0.25) connecting the dots to better visualize the n
 
 ```{python}
 # Create the figure
-plt.figure(figsize=(8, 4))
+plt.figure(figsize=(7, 4))
 
 # Plot the noise as blue dots connected by a thin line
 plt.plot(t, noise, "o-", markersize=4, linewidth=0.25)
@@ -111,7 +111,7 @@ Now we plot the original signal (`s`) and the noisy signal (`s_noisy`) together 
 
 ```{python}
 # Create the figure
-plt.figure(figsize=(8, 4))
+plt.figure(figsize=(7, 4))
 
 # Plot the original signal in light gray
 plot_signal(t, s, color="lightgray")
