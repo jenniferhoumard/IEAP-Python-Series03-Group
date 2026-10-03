@@ -30,22 +30,17 @@ Our original signal contains two frequencies: 1 Hz and 2 Hz. However, adding whi
 
 A low-pass filter reduces the higher frequencies while allowing lower frequencies to pass through.
 
-We choose a cutoff frequency of 5 Hz because it is higher than both original frequencies (1 Hz and 2 Hz). This allows us to keep most of the original signal while reducing higher-frequency noise. Frequencies above 5 Hz are progressively reduced rather than completely removed.
+We chose a cutoff frequency of 5 Hz because it is higher than both original frequencies (1 Hz and 2 Hz). This allows us to keep most of the original signal while reducing higher-frequency noise. Frequencies above 5 Hz are progressively reduced rather than completely removed.
 
 2. Why use a Butterworth filter instead of a moving average?
 
 A moving average reduces fluctuations by replacing each point with the average of a group of neighboring points. The number of points used to calculate this average is called the window size. For example, a window size of 10 means that 10 points are averaged to calculate each new value. Although this makes the signal smoother, it can also change the shape and amplitude of peaks, especially if the window size is too large.
 
-A Butterworth filter works differently: it reduces unwanted frequencies based on a chosen cutoff. Since we already know our original signal contains 1 Hz and 2 Hz components, we can choose a cutoff of 5 Hz to preserve them.
-
-A Butterworth filter reduces noise by weakening high-frequency fluctuations, which are often responsible for the small, unwanted peaks and valleys in the noisy signal. Since our original signal contains frequencies of 1 Hz and 2 Hz, we choose a cutoff of 5 Hz to preserve most of the original signal while reducing higher-frequency noise.
-
-The Butterworth filter also helps preserve the original signal without changing it too much. It reduces unwanted high-frequency noise while keeping the lower frequencies (1 Hz and 2 Hz) almost unchanged. This is useful because we want to remove noise without changing the shape of the original signal.
-
+A Butterworth filter works differently: it reduces unwanted frequencies based on a chosen cutoff. Since we already know our original signal contains 1 Hz and 2 Hz components, we can choose a cutoff of 5 Hz to preserve them. Thus, the Butterworth filter reduces noise without significantly changing the shape of the original signal.
 
 3. Creating the filter with butter()
 
-We use butter(4, 5, btype="low", fs=fs) with the following parameters:
+We used butter(4, 5, btype="low", fs=fs) with the following parameters:
 
 - Filter order (4): Controls how quickly higher frequencies are reduced. A higher order produces a sharper reduction above the cutoff. We choose order 4 to reduce noise without making the filter unnecessarily sharp.
 
@@ -76,3 +71,36 @@ Filtering in both directions cancels the phase shift and provides additional noi
 Our assignment focuses on detecting remarkable points, such as local maxima, minima, and zero crossings. We want to reduce noise without introducing artificial delays that would change when these points occur.
 
 Using filtfilt() helps preserve their timing, making it easier to compare the original, noisy, and filtered signals. However, filtering can still change peak amplitudes and shapes, and some noise may remain.
+
+### b) Plot and compare the filtered signal
+
+We plot the original, noisy, and filtered signals together to see how effectively the Butterworth filter reduces the noise while preserving the original shape of the signal.
+
+```{python}
+# Create the figure
+plt.figure(figsize=(9, 5))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal")
+
+# Plot the noisy signal in orange
+plot_signal(t, s_noisy, color="orange")
+plt.gca().lines[-1].set_label("Noisy signal")
+
+# Plot the filtered signal in green
+plot_signal(t, s_filtered, color="green")
+plt.gca().lines[-1].set_label("Filtered signal")
+
+# Add title, labels, legend, and grid
+plt.title("Original vs. noisy vs. filtered signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(loc="upper right")
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation**: After applying the Butterworth low-pass filter, the signal becomes smoother and closely follows the original signal. Most of the rapid fluctuations caused by white noise are reduced, while the main peaks, valleys, and overall shape are preserved. However, the filtered signal does not perfectly match the original because some noise remains.
+
+By reducing the small fluctuations, it improves the detection of remarkable points by removing many additional local maxima, minima, and zero crossings caused by noise.
