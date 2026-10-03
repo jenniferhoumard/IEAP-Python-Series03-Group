@@ -142,3 +142,28 @@ plt.show()
 **Graph interpretation**: After filtering, the signal is much smoother, with fewer local maxima and minima compared to the noisy signal. Most of the additional peaks and valleys caused by noise have disappeared, while the main remarkable points are preserved.
 
 Detection functions can now identify the meaningful peaks, valleys, and zero crossings more easily, with fewer unwanted detections caused by noise.
+
+### d) Compare the signal frequencies
+
+We reuse the frequency calculation function from Section 3.3 to check whether filtering improves the frequency estimate.
+
+```{python}
+# Calculate frequency for each signal
+info_original = compute_frequency_from_zero_crossings(t, s)
+info_noisy = compute_frequency_from_zero_crossings(t, s_noisy)
+info_filtered = compute_frequency_from_zero_crossings(t, s_filtered)
+
+# Print the calculated frequencies
+print("Original signal:")
+print_frequency_info(info_original)
+
+print("\nNoisy signal:")
+print_frequency_info(info_noisy)
+
+print("\nFiltered signal:")
+print_frequency_info(info_filtered)
+```
+
+**Interpretation**: The original signal has a frequency of 1 Hz, while the noisy signal gives an incorrect estimate of 13.94 Hz. This happens because noise creates additional zero crossings, reducing the average time between crossings and causing the calculated frequency to increase.
+
+After applying the Butterworth low-pass filter, most additional zero crossings disappear, and the estimated frequency returns to 0.99 Hz, close to the original 1 Hz. This shows that filtering improves the accuracy of frequency estimation by reducing the effect of noise.
