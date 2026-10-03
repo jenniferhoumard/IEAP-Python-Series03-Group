@@ -1,6 +1,11 @@
 ## Explain and improve the previous code
 
 We've improved the previous code by adding some line to explain each commands.
+I made several changes to the original code to make it more readable and easier to understand. 
+I reorganized the different parts of the code into clear functions, added comments and explanations for the main steps, and used more explicit variable and function names. 
+I also added tests to check that the zero-crossing detection works correctly for different types of signals, including signals containing zeros. 
+Finally, I improved the visualization by separating the plotting functions and clearly displaying positive and negative zero crossings.
+
 
 
 # What is the role of units tests provided for find_zero_crossings ?
