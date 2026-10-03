@@ -1,1 +1,177 @@
 ## Low pass filter the noisy signal
+
+**Objective:** Reduce the random fluctuations in the noisy signal while keeping the overall shape of the original signal.
+
+We use a **Butterworth low-pass filter**, which reduces high-frequency noise while allowing lower frequencies to pass through.
+
+### a) Create and apply the low-pass filter
+
+We use a Butterworth low-pass filter to reduce the noise in our signal while keeping its original shape.
+
+```{python}
+# Calculate the sampling frequency
+fs = 1 / (t[1] - t[0])
+
+# Create a Butterworth low-pass filter
+b, a = butter(4, 5, btype="low", fs=fs)
+
+# Apply the filter to the noisy signal
+s_filtered = filtfilt(b, a, s_noisy)
+
+print("Sampling frequency:", round(fs, 2), "Hz")
+print("Filter coefficients (b):", b)
+print("Filter coefficients (a):", a)
+print("Filtered signal (first 5 samples):", s_filtered[:5])
+```
+
+1. How does the filter work?
+
+Our original signal contains two frequencies: 1 Hz and 2 Hz. However, adding white noise introduces random fluctuations across many frequencies, including high frequencies that cause the signal to look irregular.
+
+A low-pass filter reduces the higher frequencies while allowing lower frequencies to pass through.
+
+We chose a cutoff frequency of 5 Hz because it is higher than both original frequencies (1 Hz and 2 Hz). This allows us to keep most of the original signal while reducing higher-frequency noise. Frequencies above 5 Hz are progressively reduced rather than completely removed.
+
+2. Why use a Butterworth filter instead of a moving average?
+
+A moving average reduces fluctuations by replacing each point with the average of a group of neighboring points. The number of points used to calculate this average is called the window size. For example, a window size of 10 means that 10 points are averaged to calculate each new value. Although this makes the signal smoother, it can also change the shape and amplitude of peaks, especially if the window size is too large.
+
+A Butterworth filter works differently: it reduces unwanted frequencies based on a chosen cutoff. Since we already know our original signal contains 1 Hz and 2 Hz components, we can choose a cutoff of 5 Hz to preserve them. Thus, the Butterworth filter reduces noise without significantly changing the shape of the original signal.
+
+3. Creating the filter with butter()
+
+We used butter(4, 5, btype="low", fs=fs) with the following parameters:
+
+- Filter order (4): Controls how quickly higher frequencies are reduced. A higher order produces a sharper reduction above the cutoff. We choose order 4 to reduce noise without making the filter unnecessarily sharp.
+
+- Cutoff frequency (5): Frequencies below 5 Hz are mostly preserved, while higher frequencies are progressively reduced.
+
+- Filter type (btype="low"): Specifies that we want a low-pass filter.
+
+- Sampling frequency (fs=fs): Tells the filter how many signal points were sampled per second. Our signal contains one point every 0.01 seconds, giving a sampling frequency of 100 Hz.
+
+- The butter() function then calculates two sets of coefficients, b and a, which define how the filter processes the signal. These coefficients are calculated automatically by SciPy.
+
+4. Applying the filter with filtfilt()
+
+Once the filter is created, we apply it to the noisy signal using filtfilt(b, a, s_noisy).
+
+Normally, filtering in only one direction can introduce a phase shift, meaning peaks and zero crossings may appear slightly later than in the original signal.
+
+To avoid this, filtfilt() applies the filter twice:
+
+- Forward: From the beginning to the end of the signal.
+
+- Backward: From the end to the beginning.
+
+Filtering in both directions cancels the phase shift and provides additional noise reduction.
+
+5. Why is this important?
+
+Our assignment focuses on detecting remarkable points, such as local maxima, minima, and zero crossings. We want to reduce noise without introducing artificial delays that would change when these points occur.
+
+Using filtfilt() helps preserve their timing, making it easier to compare the original, noisy, and filtered signals. However, filtering can still change peak amplitudes and shapes, and some noise may remain.
+
+### b) Plot and compare the filtered signal
+
+We plot the original, noisy, and filtered signals together to see how effectively the Butterworth filter reduces the noise while preserving the original shape of the signal.
+
+```{python}
+
+#| out-width: "85%"
+#| fig-align: center
+
+# Create the figure
+plt.figure(figsize=(8, 5))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal")
+
+# Plot the noisy signal in orange
+plot_signal(t, s_noisy, color="orange")
+plt.gca().lines[-1].set_label("Noisy signal")
+
+# Plot the filtered signal in green
+plot_signal(t, s_filtered, color="green")
+plt.gca().lines[-1].set_label("Filtered signal")
+
+# Add title, labels, legend, and grid
+plt.title("Original vs. noisy vs. filtered signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(loc="upper right", fontsize=8)
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation**: After applying the Butterworth low-pass filter, the signal becomes smoother and closely follows the original signal. Most of the rapid fluctuations caused by white noise are reduced, while the main peaks, valleys, and overall shape are preserved. However, the filtered signal does not perfectly match the original because some noise remains.
+
+By reducing the small fluctuations, it improves the detection of remarkable points by removing many additional local maxima, minima, and zero crossings caused by noise.
+
+### c) Detect remarkable points in the filtered signal
+
+We now use the functions from Section 2 to detect local maxima, minima, and zero crossings in the filtered signal.
+
+The aim is to check whether removing noise reduces the additional remarkable points detected in the noisy signal.
+
+```{python}
+# Detect maxima and minima in the filtered signal
+i_max_f, i_min_f = find_local_maxima_minima(s_filtered)
+
+# Detect positive and negative zero crossings
+i_pos_f, i_neg_f = find_zero_crossings(s_filtered)
+
+# Create the figure
+
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
+
+# Plot the filtered signal
+plot_signal(t, s_filtered, color="green")
+
+# Mark the detected remarkable points
+plot_remarkable_points(t[i_max_f], s_filtered[i_max_f], "*r", "Local maxima")
+plot_remarkable_points(t[i_min_f], s_filtered[i_min_f], "*m", "Local minima")
+plot_remarkable_points(t[i_pos_f], s_filtered[i_pos_f], "*g", "Positive zero crossings")
+plot_remarkable_points(t[i_neg_f], s_filtered[i_neg_f], "*y", "Negative zero crossings")
+
+# Add title, labels, legend, and grid
+plt.title("Remarkable points of the filtered signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(loc="upper right", fontsize=8)
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation**: After filtering, the signal is much smoother, with fewer local maxima and minima compared to the noisy signal. Most of the additional peaks and valleys caused by noise have disappeared, while the main remarkable points are preserved.
+
+Detection functions can now identify the meaningful peaks, valleys, and zero crossings more easily, with fewer unwanted detections caused by noise.
+
+### d) Compare the signal frequencies
+
+We reuse the frequency calculation function from Section 3.3 to check whether filtering improves the frequency estimate.
+
+```{python}
+# Calculate frequency for each signal
+info_original = compute_frequency_from_zero_crossings(t, s)
+info_noisy = compute_frequency_from_zero_crossings(t, s_noisy)
+info_filtered = compute_frequency_from_zero_crossings(t, s_filtered)
+
+# Print the calculated frequencies
+print("Original signal:")
+print_frequency_info(info_original)
+
+print("\nNoisy signal:")
+print_frequency_info(info_noisy)
+
+print("\nFiltered signal:")
+print_frequency_info(info_filtered)
+```
+
+**Interpretation**: The original signal has a frequency of 1 Hz, while the noisy signal gives an incorrect estimate of 13.94 Hz. This happens because noise creates additional zero crossings, reducing the average time between crossings and causing the calculated frequency to increase.
+
+After applying the Butterworth low-pass filter, most additional zero crossings disappear, and the estimated frequency returns to 0.99 Hz, close to the original 1 Hz. This shows that filtering improves the accuracy of frequency estimation by reducing the effect of noise.

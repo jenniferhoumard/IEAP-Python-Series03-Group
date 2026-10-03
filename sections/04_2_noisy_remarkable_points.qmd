@@ -1,1 +1,96 @@
 ## Plot the remarkable points in the noisy signal
+
+**Objective:** To investigate how adding white noise affects the detection of zero crossings, local maxima, and minima.
+
+### a) Identify remarkable points manually
+
+Before using the detection functions from Section 2, we first examine the noisy signal to identify its remarkable points visually.
+
+We first examine the noisy signal to identify local maxima, minima, and zero crossings by hand before using the detection functions. We use `%matplotlib widget` to zoom in on the signal and inspect individual points more closely.
+
+A remarkable point is identified as follows:
+
+| Point | How to identify it |
+|---|---|
+| Local maximum | A point higher than its neighboring points |
+| Local minimum | A point lower than its neighboring points |
+| Positive zero crossing | Signal changes from negative to positive |
+| Negative zero crossing | Signal changes from positive to negative |
+
+```{python}
+#| eval: false
+
+# Enable interactive plotting to zoom in and inspect remarkable points
+%matplotlib widget
+
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
+plot_signal(t, s_noisy)
+
+plt.title("Noisy signal")
+plt.xlabel("Time (s)")
+plt.grid(True)
+plt.show()
+```
+
+### b) Detect and plot the remarkable points
+
+We now reuse the functions from Section 2 to automatically detect the local maxima, minima, and positive and negative zero crossings of the noisy signal.
+
+```{python}
+# Find the local maxima and minima of the noisy signal
+i_max, i_min = find_local_maxima_minima(s_noisy)
+
+# Find the positive and negative zero crossings
+i_pos, i_neg = find_zero_crossings(s_noisy)
+
+# Plot the results
+
+#| out-width: "85%"
+#| fig-align: center
+
+plt.figure(figsize=(8, 5))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal")
+
+# Plot the noisy signal in blue
+plot_signal(t, s_noisy, color="blue")
+plt.gca().lines[-1].set_label("Noisy signal")
+
+# Mark the detected remarkable points
+plot_remarkable_points(t[i_max], s_noisy[i_max], "*r", "Local maxima")
+plot_remarkable_points(t[i_min], s_noisy[i_min], "*m", "Local minima")
+plot_remarkable_points(t[i_pos], s_noisy[i_pos], "*g", "Positive zero crossings")
+plot_remarkable_points(t[i_neg], s_noisy[i_neg], "*y", "Negative zero crossings")
+
+# Add title, labels, legend, and grid
+plt.title("Remarkable points of the noisy signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend(loc="upper right", fontsize=8)
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation**: The functions detect the local maxima, minima, and zero crossings in the noisy signal. However, the added noise creates many small fluctuations, resulting in extra peaks, valleys, and sometimes zero crossings that were not present in the original signal.
+
+This happens because the functions detect changes between neighboring points without knowing whether they come from the original signal or from noise.
+
+This is important because noise makes it harder to identify the meaningful remarkable points of the original signal, leading to extra detections and potentially inaccurate results. Therefore, filtering the noise may help improve the detection of these points.
+
+### c) Check the manually identified remarkable points against the detected ones
+
+Compare these results with the points identified visually on the interactive graph. Note: the zero-crossing function returns the sample just before each sign change, rather than an interpolated crossing time.
+
+```{python}
+# Print the first 5 detected points of each type
+print("Local maxima (s):", np.round(t[i_max][:5], 2))
+print("Local minima (s):", np.round(t[i_min][:5], 2))
+print("Positive zero crossings (s):", np.round(t[i_pos][:5], 2))
+print("Negative zero crossings (s):", np.round(t[i_neg][:5], 2))
+```
+

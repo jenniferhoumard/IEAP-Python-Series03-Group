@@ -46,8 +46,9 @@ def load_qmd_code(filename):
         plt.close("all")
 
 # the zero-crossing functions and the signal functions are needed here
-load_qmd_code("02_1_zero_crossings.qmd")
-load_qmd_code("03_1_create_signal.qmd")
+# Load earlier files from the sections folder
+load_qmd_code("sections/02_1_zero_crossings.qmd")
+load_qmd_code("sections/03_1_create_signal.qmd")
 ```
 
 The functions I reuse are:

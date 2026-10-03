@@ -1,1 +1,139 @@
+Overview: The aim is to investigate how adding noise affects the detection of remarkable points (zero crossings, local maxima, and minima), then use a low-pass filter to reduce that noise.
+
+| Subsection | Task | Reused code |
+|---|---|---|
+| 4.1 Create the noisy signal | Generate white noise, add it to the original signal, and plot it. | Original signal from Section 3.1 and `plot_signal()` from Section 2. |
+| 4.2 Remarkable points | Detect zero crossings, local maxima, and minima, and analyze the effects of noise. | Detection and plotting functions from Section 2 and frequency calculation from Section 3.3. |
+| 4.3 Low-pass filter | Apply a Butterworth filter and compare the filtered and noisy signals. | `butter`, `filtfilt`, and previous analysis functions.
+
 ## Create the noisy signal and plot it
+
+**Objective:** To simulate measurement errors or disturbances, we add white
+noise to the original signal from Section 3. White noise introduces random
+fluctuations that can affect the detection of zero crossings, local maxima,
+and minima.
+
+The noisy signal is obtained by adding random noise to the original signal:
+
+$s_{noisy} = s_{original} + noise$
+
+### a) Define the noise level
+
+We use `np.random.normal()` to generate white noise, where the random
+values follow a normal distribution.
+
+First, we need to define how much the noise can fluctuate:
+
+1. **Calculate the peak-to-peak amplitude:** Subtract the minimum value
+   from the maximum value of the original signal.
+2. **Set the noise level to 20%:** We use 20% of the peak-to-peak amplitude
+   as the **standard deviation**, which controls how spread out the random
+   noise values are around zero.
+
+```{python}
+# Calculate the peak-to-peak amplitude of the original signal
+signal_amplitude = np.max(s) - np.min(s)
+
+# Set the noise standard deviation to 20% of the amplitude
+noise_std = 0.2 * signal_amplitude
+```
+
+### b) Generate and add white noise
+
+We use `np.random.normal()` to generate random noise values that follow a **normal distribution**. This means that values close to zero are more likely to occur, while large positive or negative values are less common.
+
+We use a normal distribution because it can better simulate real measurement errors, such as sensor noise. Small fluctuations around zero are more common, while large fluctuations are less likely. This is useful for studying how noise affects the detection of remarkable points.
+
+The function uses three parameters:
+
+1. **Mean (`0`):** The noise values are centered around zero, so they can
+   be positive or negative.
+2. **Standard deviation (`noise_std`):** Controls how much the noise
+   values vary. About 68% of the values fall within one standard
+   deviation of zero, while larger fluctuations are less common.
+3. **Number of samples (`len(s)`):** Generates one random noise value
+   for each point of the original signal.
+
+```{python}
+# Generate one random noise value for each point of the original signal
+noise = np.random.normal(0, noise_std, len(s))
+
+# Add the random noise values to the original signal
+s_noisy = s + noise
+
+# Print the first 5 values to compare
+print("Original signal:", s[:5])
+print("Random noise:   ", noise[:5])
+print("Noisy signal:   ", s_noisy[:5])
+```
+
+### c) Plot the noisy signal
+
+We first plot the generated noise alone to visualize how the random values
+
+**Graph interpretation**: The noise values are randomly scattered above and below zero, with no clear repeating pattern. This is expected because the noise values were generated independently using a normal distribution centered at zero.
+
+```{python}
+# Create the figure
+plt.figure(figsize=(7, 4))
+
+# Plot the noise as blue dots without connecting lines
+plt.plot(t, noise, "o", markersize=4)
+
+# Add title, axis labels, and grid
+plt.title("Generated white noise")
+plt.xlabel("Time (s)")
+plt.ylabel("Noise amplitude")
+plt.grid(True)
+plt.show()
+```
+
+Now we add a thin line (lw = 0.25) connecting the dots to better visualize the noisy signal
+
+```{python}
+# Create the figure
+plt.figure(figsize=(7, 4))
+
+# Plot the noise as blue dots connected by a thin line
+plt.plot(t, noise, "o-", markersize=4, linewidth=0.25)
+
+# Add title, axis labels, and grid
+plt.title("Generated white noise")
+plt.xlabel("Time (s)")
+plt.ylabel("Noise amplitude")
+plt.grid(True)
+plt.show()
+```
+
+### d) Compare the original and noisy signals
+
+Now we plot the original signal (`s`) and the noisy signal (`s_noisy`) together to see how adding white noise changes the signal.
+
+```{python}
+# Create the figure
+plt.figure(figsize=(7, 4))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal") # gets the current graph and accesses all lines and finds the last line [-1] cause the defined function plots one line at zero and the other is the original signal. Renames that line for the legend. 
+
+# Plot the noisy signal in orange
+plot_signal(t, s_noisy, color="orange")
+plt.gca().lines[-1].set_label("Signal + noise")
+
+# Add title, labels, legend, and grid
+plt.title("Original signal vs. noisy signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation:** The noisy signal still follows the overall shape of the original signal but has additional random fluctuations. These fluctuations can create extra local maxima, minima, and zero crossings, making the detection of remarkable points more difficult.
+
+
+
+
+
+
