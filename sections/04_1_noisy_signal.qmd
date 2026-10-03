@@ -105,3 +105,35 @@ plt.grid(True)
 plt.show()
 ```
 
+### d) Compare the original and noisy signals
+
+Now we plot the original signal (`s`) and the noisy signal (`s_noisy`) together to see how adding white noise changes the signal.
+
+```{python}
+# Create the figure
+plt.figure(figsize=(8, 4))
+
+# Plot the original signal in light gray
+plot_signal(t, s, color="lightgray")
+plt.gca().lines[-1].set_label("Original signal") # gets the current graph and accesses all lines and finds the last line [-1] cause the defined function plots one line at zero and the other is the original signal. Renames that line for the legend. 
+
+# Plot the noisy signal in orange
+plot_signal(t, s_noisy, color="orange")
+plt.gca().lines[-1].set_label("Signal + noise") plot_signal and renames it 
+
+# Add title, labels, legend, and grid
+plt.title("Original signal vs. noisy signal")
+plt.xlabel("Time (s)")
+plt.ylabel("Amplitude")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+**Graph interpretation:** The noisy signal still follows the overall shape of the original signal but has additional random fluctuations. These fluctuations can create extra local maxima, minima, and zero crossings, making the detection of remarkable points more difficult.
+
+
+
+
+
+
