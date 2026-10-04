@@ -1,4 +1,4 @@
-Overview: The aim is to investigate how adding noise affects the detection of remarkable points (zero crossings, local maxima, and minima), then use a low-pass filter to reduce that noise.
+**Overview**: The aim is to investigate how adding noise affects the detection of remarkable points (zero crossings, local maxima, and minima), then use a low-pass filter to reduce that noise.
 
 | Subsection | Task | Reused code |
 |---|---|---|
@@ -17,7 +17,7 @@ The noisy signal is obtained by adding random noise to the original signal:
 
 $s_{noisy} = s_{original} + noise$
 
-### a) Define the noise level
+### Define the noise level
 
 We use `np.random.normal()` to generate white noise, where the random
 values follow a normal distribution.
@@ -38,7 +38,7 @@ signal_amplitude = np.max(s) - np.min(s)
 noise_std = 0.2 * signal_amplitude
 ```
 
-### b) Generate and add white noise
+### Generate and add white noise
 
 We use `np.random.normal()` to generate random noise values that follow a **normal distribution**. This means that values close to zero are more likely to occur, while large positive or negative values are less common.
 
@@ -67,7 +67,7 @@ print("Random noise:   ", noise[:5])
 print("Noisy signal:   ", s_noisy[:5])
 ```
 
-### c) Plot the noisy signal
+### Plot the noisy signal
 
 We first plot the generated noise alone to visualize how the random values
 
@@ -105,7 +105,7 @@ plt.grid(True)
 plt.show()
 ```
 
-### d) Compare the original and noisy signals
+### Compare the original and noisy signals
 
 Now we plot the original signal (`s`) and the noisy signal (`s_noisy`) together to see how adding white noise changes the signal.
 
