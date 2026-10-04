@@ -10,6 +10,10 @@ This repository contains the group assignment for **Python Series 03**, focusing
 
 The project also introduces collaborative development using **Git and GitHub**, with individual branches, pull requests, code integration, and a shared final report created using **Quarto**.
 
+The complete Python Series 03 assignment is available as an HTML report generated using Quarto:
+
+https://jenniferhoumard.github.io/IEAP-Python-Series03-Group/IEAP-Python-Series03-Group.html
+
 ## Project Content
 
 The assignment is organized into five main sections, each divided into subsections corresponding to individual Quarto (`.qmd`) files.
