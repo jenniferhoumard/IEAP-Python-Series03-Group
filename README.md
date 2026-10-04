@@ -12,35 +12,39 @@ The project also introduces collaborative development using **Git and GitHub**, 
 
 ## Project Content
 
-The assignment is organized into five sections:
+The assignment is organized into five main sections, each divided into subsections corresponding to individual Quarto (`.qmd`) files.
 
-### 1. Group organization and GitHub workflow
-- Organization of group contributions.
-- Branch management and pull requests.
-- Collaborative development and code integration.
+### 1. Group Organization and GitHub Workflow
+#### **1.1. Group Organization**
+Description of the task distribution, individual responsibilities, GitHub branch structure, and collaborative workflow used throughout the assignment.
 
-### 2. Remarkable-point detection
-- Detection of positive and negative zero crossings.
-- Understanding and improving existing code.
-- Detection of local maxima and minima.
-- Creation of reusable detection and plotting functions.
+### 2. Remarkable-Point Detection
+#### **2.1. Functions to Find and Plot Zero Crossings**
+Implementation of functions to detect positive and negative zero crossings, handle exact zero values, test the functions, and visualize the results.
+#### **2.2. Explain and Improve Existing Code**
+Analysis and explanation of the provided Python code, including improvements to its implementation.
+#### **2.3. Functions to Find Local Maxima and Minima**
+Implementation and testing of reusable functions to identify and visualize local maxima and minima in a signal.
 
-### 3. Signal generation and analysis
-- Generation of sinusoidal signals.
-- Identification and visualization of remarkable points.
-- Estimation of signal period and frequency.
+### 3. Signal Generation and Analysis
+#### **3.1. Create a Signal**
+Generation and visualization of sinusoidal signals using Python.
+#### **3.2. Remarkable Points**
+Application of the previously developed functions to identify and visualize zero crossings, local maxima, and local minima in the generated signal.
+#### **3.3. Signal Frequency**
+Estimation of signal period and frequency using the detected zero crossings.
 
-### 4. Noise analysis and filtering
-- Addition of normally distributed random noise.
-- Analysis of noise effects on remarkable-point detection.
-- Application of a Butterworth low-pass filter.
-- Comparison of original, noisy, and filtered signals.
-- Evaluation of frequency estimation after filtering.
+### 4. Noise Analysis and Filtering
+#### **4.1. Noisy Signal**
+Addition of normally distributed random noise to the generated signal and visualization of its effects.
+#### **4.2. Remarkable Points in the Noisy Signal**
+Analysis of how noise affects the detection of zero crossings, local maxima, and local minima.
+#### **4.3. Low-Pass Filtering**
+Application of a Butterworth low-pass filter to reduce noise, compare original and filtered signals, and evaluate improvements in remarkable-point detection and frequency estimation.
 
-### 5. Critical points and problem solving
-- Management of generated HTML files.
-- Reuse of functions and libraries across sections.
-- Resolution of GitHub branch and pull request issues.
+### 5. Critical Points and Problem Solving
+#### **5.1. Critical Points**
+Documentation of challenges encountered during the assignment, including generated HTML files, reuse of functions across sections, and GitHub branch and pull request issues, along with their solutions.
 
 ## Repository Structure
 
