@@ -10,7 +10,7 @@ However, rendering individual sections generated additional HTML files and folde
 
 We updated the .gitignore file to automatically ignore the generated HTML files and temporary Quarto folders.
 
-# Quarto generated files
+**Quarto generated files**
 *_files/
 .quarto/
 sections/*.html
