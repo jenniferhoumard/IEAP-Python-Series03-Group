@@ -1,18 +1,18 @@
 
 ## Functions to find zero crossings and to plot them
 
-# Create the signal and index arrays
-We just copied the signal and index arrays from the series of exercises.
+**Objective:** Create functions to detect positive and negative zero crossings in a signal and plot their positions.
+
+### Create the signal and index arrays
+
+We use the signal and index arrays provided in the exercises.
 
 ```{python}
-import numpy as np
-import matplotlib.pyplot as plt
-
 index =  [    0,    1,    2,    3,    4,    5,    6,    7,    8,    9   ]
 signal =  [   -1,    1,    2,    1,    0,   -1,    1,    2,    1,   -2   ]
+```
 
-
-# make the index and signal as numpy arrays
+```{python}
 index = np.array(index)
 signal = np.array(signal)
 
@@ -28,11 +28,40 @@ plt.xlabel("Index")
 plt.ylabel("Signal")
 plt.title("Signal Plot")
 plt.show()
+```
 
 
-##Find zero crossing points
+### Find zero crossing points
 
-# Find the zero crossing points in the signal
+A zero crossing occurs when the signal changes sign.
+
+- **Positive crossing:** Negative to positive.
+- **Negative crossing:** Positive to negative.
+
+To identify these changes, we use `np.sign()`, `np.diff()`, and `np.where()`.
+
+**1. Identify the signs of the signal**
+
+First, `np.sign()` converts each signal value into:
+
+- `-1`: Negative value
+- `0`: Zero
+- `1`: Positive value
+
+**2. Detect changes between neighboring signs**
+
+Next, `np.diff()` subtracts each sign from the following sign to identify where the sign changes.
+
+- **Positive difference:** A change toward a more positive sign.
+- **Negative difference:** A change toward a more negative sign.
+- **Zero difference:** No change in sign.
+
+**3. Identify positive and negative changes**
+
+We can separate the changes according to their direction.
+
+```{python}
+# Signal signs, differences, and indices of sign changes
 
 signal_sign = np.sign(signal)
 diff_signal_sign = np.diff(signal_sign)
@@ -41,26 +70,55 @@ where_diff_signal_sign_nonzero = np.where(diff_signal_sign != 0)[0]
 print("Signal signs:", signal_sign)
 print("Difference of signal signs:", diff_signal_sign)
 print("Indices where the difference of signal signs is non-zero:", where_diff_signal_sign_nonzero)
+```
 
+**4. Alternative method**
+
+The same sign-change indices can be obtained in a single line:
+
+```{python}
 # Alternative method to find zero crossing points
 zero_crossings = np.where(np.diff(np.sign(signal)))[0]
 print("Zero crossing points (indices):", zero_crossings)
+```
 
+### Find positive zero-crossing functions
+
+```{python}
 # Find positive zero-crossing points
 positive_zero_crossing = np.where(diff_signal_sign > 0)[0]
 print("Positive zero crossing points (indices):", positive_zero_crossing)
+```
 
-# Find negative zero-crossing points
+### Find negative zero-crossing points
+```{python}
 negative_zero_crossing = np.where(diff_signal_sign < 0)[0]
 print("Negative zero crossing points (indices):", negative_zero_crossing)
+```
 
-# plot the signal with positive and negative zero crossing
+### d) Plot the signal with positive and negative zero-crossings
 
+```{python}
 plt.plot(index, signal, label='Signal')
 plt.scatter(index[positive_zero_crossing], signal[positive_zero_crossing], color='green', label='Positive')
 plt.scatter(index[negative_zero_crossing], signal[negative_zero_crossing], color='blue', label='Negative')
 plt.axhline(y=0, color='red', linestyle='--', label='Zero Line')
+plt.xlabel("Index")
+plt.ylabel("Signal")
+plt.title("Signal with Positive and Negative Zero Crossings")
+plt.legend(fontsize=8)
+plt.show()
+```
 
+### Define reusable zero-crossing functions
+
+We define three functions to detect positive and negative zero crossings, including cases where the signal contains exact zero values.
+
+**1. Detect crossings without zero values***
+
+The function `find_zero_crossings_no_zeros()` compares neighboring signs and returns the indices where the signal changes from negative to positive or from positive to negative.
+
+```{python}
 def find_zero_crossings_no_zeros(signs: np.ndarray):
     """Return indices where a zero-free sign array changes direction.
 
@@ -83,8 +141,13 @@ def find_zero_crossings_no_zeros(signs: np.ndarray):
     i_cross_pos = np.where(diff > 0)[0]
     i_cross_neg = np.where(diff < 0)[0]
     return i_cross_pos, i_cross_neg
+```
 
+**2. Handle zero values**
 
+The function `propagate_signs_over_zeros()` replaces exact zero values with the preceding nonzero sign.
+
+```{python}
 def propagate_signs_over_zeros(signs: np.ndarray):
     """Replace zero signs using the nearest preceding nonzero sign.
 
@@ -123,8 +186,14 @@ def propagate_signs_over_zeros(signs: np.ndarray):
             signs_no_zeros[: i_first_nonzero[0]] = signs[i_first_nonzero[0]]
 
     return signs_no_zeros
+```
 
 
+**3. Combine the functions**
+
+The function `find_zero_crossings()` combines the previous two functions. It first checks the input, handles zero values if needed, and then identifies positive and negative crossings.
+
+```{python}
 def find_zero_crossings(s: np.ndarray):
     """Find positive and negative crossings in a one-dimensional signal.
 
@@ -164,7 +233,15 @@ def find_zero_crossings(s: np.ndarray):
         signs_no_zeros = signs
 
     return find_zero_crossings_no_zeros(signs_no_zeros)
+```
 
+### Test the zero-crossing functions
+
+To verify that our functions work correctly, we use `test_find_zero_crossings()`.
+
+The tests check different situations, including positive and negative crossings, exact zero values, signals without crossings, empty arrays, and invalid inputs.
+
+```{python}
 def test_find_zero_crossings():
     """Check crossing results for normal, boundary, and invalid inputs.
 
@@ -240,8 +317,18 @@ try:
     print("All tests passed.")
 except AssertionError:
     raise
+```
 
 
+### Define plotting functions
+
+We define the following functions to visualize the signal and its positive and negative zero crossings.
+
+**1. Plot the signal**
+
+The `plot_signal()` function plots the signal against its index or time values and adds a horizontal reference line at zero.
+
+```{python}
 def plot_signal(i: np.ndarray, s: np.ndarray, color: str = "blue"):
     """Draw a signal and a horizontal zero line on the current axes.
 
@@ -263,8 +350,13 @@ def plot_signal(i: np.ndarray, s: np.ndarray, color: str = "blue"):
     plt.plot(i, s, ".-", markersize=5, linewidth=0.25, color=color, label="signal")
     plt.ylabel("signal")
     plt.xlabel("index")
+```
 
+**2. Plot remarkable points**
 
+The `plot_remarkable_points()` function is used to mark specific points on the signal using different colors, symbols, and labels.
+
+```{python}
 def plot_remarkable_points(t: np.ndarray, s: np.ndarray, format: str, label: str):
     """Draw labeled signal points on the current axes.
 
@@ -285,8 +377,13 @@ def plot_remarkable_points(t: np.ndarray, s: np.ndarray, format: str, label: str
         Adds the points to the current Matplotlib axes.
     """
     plt.plot(t, s, format, markersize=10, label=label)
+```
 
+**3.Plot positive zero crossings**
 
+The `plot_positive_zero_crossings()` function uses `find_zero_crossings()` to identify where the signal changes from negative to positive and marks these points with red upward triangles.
+
+```{python}
 def plot_positive_zero_crossings(i: np.ndarray, s: np.ndarray):
     """Mark negative-to-positive crossings on the current axes.
 
@@ -305,8 +402,13 @@ def plot_positive_zero_crossings(i: np.ndarray, s: np.ndarray):
     """
     i_pos, _ = find_zero_crossings(s)
     plot_remarkable_points(i[i_pos], s[i_pos], "^r", "positive zero crossings")
+```
 
+**4. Plot negative zero crossings**
 
+The `plot_negative_zero_crossings()` function identifies where the signal changes from positive to negative and marks these points with yellow downward triangles.
+
+```{python}
 def plot_negative_zero_crossings(i: np.ndarray, s: np.ndarray):
     """Mark positive-to-negative crossings on the current axes.
 
@@ -325,8 +427,13 @@ def plot_negative_zero_crossings(i: np.ndarray, s: np.ndarray):
     """
     _, i_neg = find_zero_crossings(s)
     plot_remarkable_points(i[i_neg], s[i_neg], "vy", "negative zero crossings")
+```
 
+**5. Plot both zero-crossing directions**
 
+The `plot_zero_crossings()` function combines the previous two functions to mark both positive and negative zero crossings on the same graph.
+
+```{python}
 def plot_zero_crossings(i: np.ndarray, s: np.ndarray):
     """Mark both crossing directions on the current axes.
 
@@ -345,8 +452,13 @@ def plot_zero_crossings(i: np.ndarray, s: np.ndarray):
     """
     plot_positive_zero_crossings(i, s)
     plot_negative_zero_crossings(i, s)
+```
 
+### Display the final result
 
+Finally, `display_signal_and_crossings()` combines the signal plot with the positive and negative zero-crossing markers. It also adds a legend and grid to make the graph easier to read.
+
+```{python}
 def display_signal_and_crossings(i: np.ndarray, s: np.ndarray):
     """Display a signal with both crossing directions, legend, and grid.
 
@@ -371,8 +483,13 @@ def display_signal_and_crossings(i: np.ndarray, s: np.ndarray):
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.grid(True)
     plt.show()
+```
 
+### Example using the original signal
 
+We apply the function to the example signal defined at the beginning of this section.
+
+```{python}
 # Example usage
 display_signal_and_crossings(index, signal)
 ```
