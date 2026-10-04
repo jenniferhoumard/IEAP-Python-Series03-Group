@@ -1,6 +1,6 @@
 ## Use the remarkable points to find the frequency of the signal
 
-# Task
+### Task
 
 Use the remarkable points to find the frequency of the signal. The idea is simple:
 
@@ -12,7 +12,7 @@ $$
 f = \frac{1}{T}
 $$
 
-# Reusing earlier functions
+### Reusing earlier functions
 
 I load only the Python code of my earlier files, so their text and plots do not appear in this document.
 
@@ -23,9 +23,6 @@ import re
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
-
-import numpy as np
-import matplotlib.pyplot as plt
 
 def load_qmd_code(filename):
     """Run all the python code chunks of a .qmd file, without rendering the file."""
@@ -57,7 +54,7 @@ The functions I reuse are:
 - `find_zero_crossings` to find the zero crossing points
 - `plot_signal` and `plot_remarkable_points` to draw things
 
-# Step 1: Create the signal
+### Step 1: Create the signal
 
 ```{python}
 # time axis from 0 to 2 seconds
@@ -67,7 +64,7 @@ t = make_time()
 s1, s2, s = generate_signal(t)
 ```
 
-# Step 2: Zero crossings with the same slope
+### Step 2: Zero crossings with the same slope
 
 `find_zero_crossings` returns two arrays of indices:
 
@@ -113,7 +110,7 @@ plt.show()
 
 In both plots the points are spaced evenly. The distance between two neighbouring points of the same kind is one period of the signal.
 
-# Step 3: Distance between the crossings
+### Step 3: Distance between the crossings
 
 First I measure the distance in **samples** (number of points between two crossings). `np.diff` gives the difference between neighbours.
 
@@ -128,7 +125,7 @@ print("delta_zero_crossing_neg (samples):", delta_neg)
 
 There are 2 positive and 2 negative crossings, so there is one distance for each. Both are 100 samples.
 
-# Step 4: Period and frequency
+### Step 4: Period and frequency
 
 To change samples into seconds I use the time vector. The time at each crossing is `t[i_pos]`, and the difference between neighbours is the period.
 
@@ -149,7 +146,7 @@ print("Signal period                 :", round(period, 6), "s")
 print("Signal frequency              :", round(frequency, 6), "Hz")
 ```
 
-# Step 5: Put it all in one function
+### Step 5: Put it all in one function
 
 Now I put the steps together in one function. It takes the time vector and the signal and returns a dictionary with all the information.
 
@@ -216,7 +213,7 @@ def print_frequency_info(info):
         print(f"{key:>35} : {text}")
 ```
 
-# Final result
+### Final result
 
 ```{python}
 info = compute_frequency_from_zero_crossings(t, s)
@@ -225,7 +222,7 @@ print_frequency_info(info)
 
 The result is a period of 1 s and a frequency of 1 Hz. This makes sense: `s` is the sum of `s1` (2 Hz) and `s2` (1 Hz). The pattern repeats every 1 s, which is the period of the slower wave.
 
-# Extra check with a simple signal
+### Extra check with a simple signal
 
 To be sure the function works in general, I test it on a single sine wave with a known frequency of 2 Hz. The period should be 0.5 s.
 

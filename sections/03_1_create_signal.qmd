@@ -1,6 +1,6 @@
 ## Create the signal and plot it
 
-# 1. Task
+### Task
 
 The task is to write functions that generate the signal **s** from the figure.
 It looks like a combination of two sine waves, so:
@@ -17,7 +17,7 @@ I will build it step by step and plot after every step:
 4. Add them to get `s` and plot it
 5. Plot all three together
 
-# 2. Imports
+### Imports
 
 ```{python}
 # numpy is used for the math (sine function and arrays of numbers)
@@ -27,7 +27,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 ```
 
-# 3. Plotting helper functions
+### Plotting helper functions
 
 Before creating the signal, I write two small functions for plotting.
 They are used in this file, and I can also reuse them in later exercises.
@@ -53,7 +53,7 @@ def plot_remarkable_points(t, s, format, label):
     plt.plot(t, s, format, markersize=10, label=label)
 ```
 
-# 4. Step 1: Time axis
+### Step 1: Time axis
 
 The signal runs from 0 to 2 seconds. I use a step of 0.01 s, which gives 200 points.
 
@@ -71,7 +71,7 @@ print("Number of points:", len(t))    # should be 200
 print("First 5 values:", t[:5])       # should start at 0 and go up by 0.01
 ```
 
-# 5. Step 2: A general sine wave function
+### Step 2: A general sine wave function
 
 A sine wave is described by three numbers:
 
@@ -96,7 +96,7 @@ def sine_wave(t, amplitude, frequency, phase=0.0):
     return amplitude * np.sin(2 * np.pi * frequency * t + phase)
 ```
 
-# 6. Step 3: First sine wave (s1)
+### Step 3: First sine wave (s1)
 
 From the figure, the green wave:
 
@@ -129,7 +129,7 @@ plt.show()
 
 It peaks at 1 and completes 4 cycles in 2 seconds, which matches the green curve in the figure.
 
-# 7. Step 4: Second sine wave (s2)
+### Step 4: Second sine wave (s2)
 
 From the figure, the orange wave:
 
@@ -159,7 +159,7 @@ plt.show()
 
 It starts at about 1.7, peaks at 2 and has 2 cycles in 2 seconds, like the orange curve in the figure.
 
-# 8. Step 5: Combine them (s)
+### Step 5: Combine them (s)
 
 Now I just add the two waves point by point:
 
@@ -201,7 +201,7 @@ plt.grid(True)
 plt.show()
 ```
 
-# 9. Putting it into one function
+### Putting it into one function
 
 Now that each step works, I wrap the whole process in one function.
 
@@ -224,7 +224,7 @@ def generate_signal(t):
 s1, s2, s = generate_signal(t)
 ```
 
-# 10. Final plot: all three signals together
+### Final plot: all three signals together
 
 ```{python}
 # make one figure that will hold all three signals

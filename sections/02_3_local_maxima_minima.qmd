@@ -1,6 +1,12 @@
 ## Create new functions to find the local maxima and minima
 
-# LOCAL MAXIMA AND MINIMA
+**Objective:** Define functions to detect and plot local maxima and minima in a signal.
+
+### Find local maxima and minima
+
+Local maxima are points where the signal changes from increasing to decreasing, while local minima occur when it changes from decreasing to increasing.
+
+The `find_local_maxima_minima()` function uses `np.diff()` to calculate the differences between neighboring samples and `find_zero_crossings()` to identify these changes.
 
 ```{python}
 def find_local_maxima_minima(s: np.ndarray):
@@ -33,8 +39,17 @@ def find_local_maxima_minima(s: np.ndarray):
     i_min = i_min + 1
 
     return i_max, i_min
+```
 
+### Define plotting functions
 
+We create three functions to visualize the detected maxima and minima.
+
+**1. Plot local maxima**
+
+The `plot_local_maxima()` function identifies local maxima and marks them with red circles.
+
+```{python}
 def plot_local_maxima(i: np.ndarray, s: np.ndarray):
     """Plot local maxima using orange circle markers.
 
@@ -52,8 +67,13 @@ def plot_local_maxima(i: np.ndarray, s: np.ndarray):
     """
     i_max, _ = find_local_maxima_minima(s)
     plot_remarkable_points(i[i_max], s[i_max], "or", "local maxima")
+```
 
+**2. Plot local minima**
 
+The `plot_local_minima()` function identifies local minima and marks them with blue circles.
+
+```{python}
 def plot_local_minima(i: np.ndarray, s: np.ndarray):
     """Plot local minima using blue circle markers.
 
@@ -71,8 +91,13 @@ def plot_local_minima(i: np.ndarray, s: np.ndarray):
     """
     _, i_min = find_local_maxima_minima(s)
     plot_remarkable_points(i[i_min], s[i_min], "ob", "local minima")
+```
 
+**3. Plot both maxima and minima**
 
+The `plot_maxima_minima()` function combines the previous two functions to display both types of points on the same graph.
+
+```{python}
 def plot_maxima_minima(i: np.ndarray, s: np.ndarray):
     """Plot both local maxima and minima on the current axes.
 
@@ -90,8 +115,13 @@ def plot_maxima_minima(i: np.ndarray, s: np.ndarray):
     """
     plot_local_maxima(i, s)
     plot_local_minima(i, s)
+```
 
+### Test the functions
 
+To verify that `find_local_maxima_minima()` works correctly, we test it using the example signal, short signals, monotonic signals, and a signal containing a flat peak.
+
+```{python}
 def test_find_local_maxima_minima():
     """Check extrema indices for the example signal and simple edge cases."""
     # The example has peaks at indices 2 and 7, and a valley at index 5.
@@ -109,11 +139,22 @@ def test_find_local_maxima_minima():
     i_max, i_min = find_local_maxima_minima(np.array([0, 1, 2, 2, 1]))
     assert np.array_equal(i_max, np.array([3]))
     assert np.array_equal(i_min, np.array([], dtype=int))
+```
 
+**Run the tests**
 
+We execute the test function to check that all assertions pass.
+
+```{python}
 test_find_local_maxima_minima()
 print("Local maxima/minima tests passed.")
+```
 
+### Display the final result
+
+Finally, we use the plotting functions to display the original signal with its local maxima and minima.
+
+```{python}
 # Display the signal with maxima and minima.
 plt.figure()
 plot_signal(index, signal)

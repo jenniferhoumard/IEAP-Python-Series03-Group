@@ -4,7 +4,7 @@
 
 We use a **Butterworth low-pass filter**, which reduces high-frequency noise while allowing lower frequencies to pass through.
 
-### a) Create and apply the low-pass filter
+### Create and apply the low-pass filter
 
 We use a Butterworth low-pass filter to reduce the noise in our signal while keeping its original shape.
 
@@ -72,7 +72,7 @@ Our assignment focuses on detecting remarkable points, such as local maxima, min
 
 Using filtfilt() helps preserve their timing, making it easier to compare the original, noisy, and filtered signals. However, filtering can still change peak amplitudes and shapes, and some noise may remain.
 
-### b) Plot and compare the filtered signal
+### Plot and compare the filtered signal
 
 We plot the original, noisy, and filtered signals together to see how effectively the Butterworth filter reduces the noise while preserving the original shape of the signal.
 
@@ -109,7 +109,7 @@ plt.show()
 
 By reducing the small fluctuations, it improves the detection of remarkable points by removing many additional local maxima, minima, and zero crossings caused by noise.
 
-### c) Detect remarkable points in the filtered signal
+### Detect remarkable points in the filtered signal
 
 We now use the functions from Section 2 to detect local maxima, minima, and zero crossings in the filtered signal.
 
@@ -151,7 +151,7 @@ plt.show()
 
 Detection functions can now identify the meaningful peaks, valleys, and zero crossings more easily, with fewer unwanted detections caused by noise.
 
-### d) Compare the signal frequencies
+### Compare the signal frequencies
 
 We reuse the frequency calculation function from Section 3.3 to check whether filtering improves the frequency estimate.
 
