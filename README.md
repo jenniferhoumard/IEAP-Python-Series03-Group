@@ -16,7 +16,7 @@ The assignment is organized into five main sections, each divided into subsectio
 
 ### 1. Group Organization and GitHub Workflow
 - #### **1.1. Group Organization**
-Description of the task distribution, individual responsibilities, GitHub branch structure, and collaborative workflow used throughout the assignment.
+  Description of the task distribution, individual responsibilities, GitHub branch structure, and collaborative workflow used throughout the assignment.
 
 ### 2. Remarkable-Point Detection
 - #### **2.1. Functions to Find and Plot Zero Crossings**
